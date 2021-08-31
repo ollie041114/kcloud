@@ -7,27 +7,39 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { SubmitPic } from './SubmitPic';
 import DateTimePicker from 'react-datetime-picker';
 
-function submitForm(e, {drum_id, sensor_id, time}){
+function submitForm(e, {drum_id, storageUniqueNumber, Longitude, Latitude, startDate, endDate}){
     //console.log(drum_id.drum_id, sensor_id.sensor_id, time);
     e.preventDefault();
     //console.log(e);
     var time = Math.round(+new Date()/1000);
+    
+    var startTime = (Math.floor(startDate.getTime() / 1000));
+    var endTime = (Math.floor(endDate.getTime() / 1000));
+    var storage_schedule = startTime + "finishat:" + endTime;
+    
+    var storage_id = storageUniqueNumber;
     const ethereumHandler = new EthereumHandler();
-    ethereumHandler._enrollment(drum_id.drum_id, time, sensor_id.sensor_id);
+
+    var longitude = Longitude; 
+    var latitude = Latitude; 
+
+
+    ethereumHandler._temporaryStorage(drum_id, time, longitude, latitude, storage_id, storage_schedule);
     return time;
 }
 //submitPic = new SubmitPic();
 
 function TemporaryStorage() {
-        var unixInSeconds = Math.round(+new Date()/1000);
         const [drum_id, setDrumId] = useState("");
         //const [sensor_id, setSensorId] = useState(""); 
         const [time, setTime] = useState(Math.round(+new Date()/1000));
-        const [storageUniqueNumber, setCarrier] = useState("");
-        const [storageLocation, setTransportationSchedule] = useState(""); 
-        const [startTime, setStartTime] = useState(null);
-        //const [endTime, setEndTime] = useState(new Date());
-        const [endTime, setEndTime] = useState(new Date());
+        
+        const [storageUniqueNumber, setStorageUniqueNumber] = useState("");
+        const [Longitude, setLongitude] = useState("");
+        const [Latitude, setLatitude] = useState("");
+        const [startDate, setStartDate] = useState(+new Date());
+        const [endDate, setEndDate] = useState(+new Date());
+        
         return(
             <div style = {{marginBottom: "40px"}}>
 
@@ -36,14 +48,14 @@ function TemporaryStorage() {
                     <div className = "field">
                         <label>Drum id: </label>
                         <input type = "text" onChange={(e)=>
-                            setDrumId({drum_id: e.target.value})
+                            setDrumId(e.target.value)
                         }/>
                     </div>
 
                     <div className = "field">
                         <label>Storage id: : </label>
                         <input type = "text" onChange={(e)=>
-                            setDrumId({drum_id: e.target.value})
+                            setStorageUniqueNumber(e.target.value)
                         }/>
                     </div>
 
@@ -53,14 +65,14 @@ function TemporaryStorage() {
                         <div style={{display: "inline-block"}}>
                             <label>Longitude</label>
                             <input type = "text" onChange={(e)=>
-                                setDrumId({drum_id: e.target.value})
+                                setLongitude(e.target.value)
                             }/>
                         </div>
 
                         <div style={{display: "inline-block"}}>
                             <label>Latitude</label>
                             <input type = "text" onChange={(e)=>
-                                setDrumId({drum_id: e.target.value})
+                                setLatitude(e.target.value)
                             }/>
                         </div>
 
@@ -70,16 +82,16 @@ function TemporaryStorage() {
                         <label>Storage schedule: </label>
                         <div>
                             <p style={{display:"inline-block", marginRight: "10px"}}>Start date: </p>
-                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setStartTime} value = {startTime} />
+                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setStartDate} value = {startDate} />
                         </div>
                         <div>
                             <p style={{display:"inline-block", marginRight: "10px"}}>End date: </p>
-                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setEndTime} value = {endTime} />
+                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setEndDate} value = {endDate} />
                         </div>
                     </div>
 
                     <button onClick={(e)=>
-                        setTime({time: submitForm(e, {drum_id, drum_id, time})})
+                        setTime({time: submitForm(e, {drum_id, storageUniqueNumber, Longitude, Latitude, startDate, endDate}) })
                     }>+</button>
                 </form>
             </div>

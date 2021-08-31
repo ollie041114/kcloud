@@ -7,13 +7,20 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { SubmitPic } from './SubmitPic';
 import DateTimePicker from 'react-datetime-picker';
 
-function submitForm(e, {drum_id, sensor_id, time}){
+function submitForm(e, {drum_id, carrier, startTime, endTime}){
     //console.log(drum_id.drum_id, sensor_id.sensor_id, time);
     e.preventDefault();
-    //console.log(e);
+
+
+    
+    var startTimeInUnix = (Math.floor(startTime.getTime() / 1000));
+    var endTimeInUnix = (Math.floor(endTime.getTime() / 1000));
+    var transportation_schedule = startTime + "finishat:" + endTime;
+    
+
     var time = Math.round(+new Date()/1000);
     const ethereumHandler = new EthereumHandler();
-    ethereumHandler._enrollment(drum_id.drum_id, time, sensor_id.sensor_id);
+    ethereumHandler._transit(drum_id.drum_id, time, carrier, transportation_schedule);
     return time;
 }
 //submitPic = new SubmitPic();
@@ -45,7 +52,7 @@ function Transit() {
                     <div className = "field">
                         <label>Carrier: </label>
                         <input type = "text" onChange={(e)=>
-                            setDrumId({drum_id: e.target.value})
+                            setCarrier({carrier: e.target.value})
                         }/>
                     </div>
 
@@ -62,7 +69,7 @@ function Transit() {
                     </div>
 
                     <button onClick={(e)=>
-                        setTime({time: submitForm(e, {drum_id, drum_id, time})})
+                        setTime({time: submitForm(e, {drum_id, carrier, startTime, endTime}) })
                     }>+</button>
                 </form>
             </div>

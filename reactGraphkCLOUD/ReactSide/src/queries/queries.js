@@ -14,14 +14,43 @@ const getQuery = gql`
     }
 `
 const getBooksQuery = gql`
-  {
-    drums(first: 5) {
+{
+    drums {
         id
-        sensor
+        currentStatus
+        date_unix
         classification
         type
         place_of_occurence
-        currentStatus
+
+        drumHistory {
+            inTransitData{
+                carrier
+                transportation_schedule
+                status
+                drum {
+                  id
+                }
+            }
+            packagingData{
+                classification
+                type
+                date_unix
+                place_of_occurence
+                wasteAcceptanceRequest
+            }
+            temporaryStorageData{
+                longitude
+                latitude
+                storage_schedule
+            }
+            takingOverData{
+				acquisition
+                transferee
+                transportation_schedule
+                wasteAcceptanceRequest
+            }
+        }
     }
   }`
 

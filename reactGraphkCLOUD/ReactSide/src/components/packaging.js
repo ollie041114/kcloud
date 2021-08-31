@@ -2,7 +2,7 @@ import React, {Component, useState, useRef} from 'react';
 import {gql, useQuery} from "@apollo/client";
 import { getQuery} from "../queries/queries";
 import EthereumHandler from '../truffleSide/writeFunctions/EthereumHandler';
-import DatePicker from 'react-datepicker';
+import DatePicker from  'react-datepicker/dist/react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { SubmitPic } from './SubmitPic';
 

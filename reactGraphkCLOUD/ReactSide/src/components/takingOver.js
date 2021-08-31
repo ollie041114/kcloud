@@ -9,33 +9,31 @@ import DateTimePicker from 'react-datetime-picker';
 
 
 //submitPic = new SubmitPic();
-function submitForm(e, {drum_id, time, acquisition, transferee, startTime, endTime, fileUrl}){
+function submitForm(e, {drum_id, time, acquisition, transferee, startDate, endDate, fileUrl}){
 
     e.preventDefault();
     var time = Math.round(+new Date()/1000);
-    var t1 = Math.round(startTime.getTime());
-    var t2 = Math.round(endTime.getTime());
-    var schedule = "" + t1 + "*"+t2;
-
+    var t1 = Math.round(startDate.getTime());
+    var t2 = Math.round(endDate.getTime());
+    var schedule = "" + t1 + "finishat:"+t2;
 
     const ethereumHandler = new EthereumHandler();
-    console.log(drum_id.drum_id, time, acquisition.acquisition, transferee, t1, t2, fileUrl.fileUrl);
-    //ethereumHandler._takingOver(drum_id.drum_id, time.time, acquisition.acquisition, transferee.transferee, schedule, 222, fileUrl.fileUrl);
+    ethereumHandler._takingOver(drum_id, time, acquisition, transferee, schedule, 222, fileUrl.fileUrl);
     return time;
 }
 
 function TakingOver() {
-        var unixInSeconds = Math.round(+new Date()/1000);
         const [drum_id, setDrumId] = useState("");
-        
-        const [startTime, setStartTime] = useState();
-        const [endTime, setEndTime] = useState();
-        
         const [time, setTime] = useState(+new Date()/1000);       
-        const [acquisition, setAcquisition] = useState("");
-        const [transferee, setTransferee] = useState(""); 
-        const [transportationSchedule, setTranposportation] = useState(null);
-        const [fileUrl, setFileUrl] = useState();
+        
+        const [acquisition, setAcquisition] = useState();
+        const [transferee, setTransferee] = useState();
+        
+        const [startDate, setStartDate] = useState(+new Date());       
+        const [endDate, setEndDate] = useState(+new Date());
+
+
+        const [fileUrl, setFileUrl] = useState(""); 
         const pic = useRef();
 
         function handleCallback (childData) {
@@ -50,21 +48,21 @@ function TakingOver() {
                     <div className = "field">
                         <label>Drum id: </label>
                         <input type = "text" onChange={(e)=>
-                            setDrumId({drum_id: e.target.value})
+                            setDrumId(e.target.value)
                         }/>
                     </div>
 
                     <div className = "field">
                         <label>Acquisition : </label>
                         <input type = "text" onChange={(e)=>
-                            setAcquisition({acquisition: e.target.value})
+                            setAcquisition(e.target.value)
                         }/>
                     </div>
 
                     <div className = "field">
                         <label>Transferee: </label>
                             <input type = "text" onChange={(e)=>
-                                setTransferee({transferee: e.target.value})
+                                setTransferee(e.target.value)
                             }/>
                     </div>
 
@@ -72,11 +70,11 @@ function TakingOver() {
                         <label>Transportation schedule: </label>
                         <div>
                             <p style={{display:"inline-block", marginRight: "10px"}}>Start date: </p>
-                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setStartTime} value = {startTime} />
+                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setStartDate} value = {startDate} />
                         </div>
                         <div>
                             <p style={{display:"inline-block", marginRight: "10px"}}>End date: </p>
-                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setEndTime} value = {endTime} />
+                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setEndDate} value = {endDate} />
                         </div>
                     </div>
 
@@ -86,8 +84,7 @@ function TakingOver() {
                   </div>  
                   
                   <button onClick={(e)=>
-                        setTime({time: submitForm(e, {drum_id, time, acquisition, 
-                            transferee, startTime, endTime, fileUrl})})
+                        setTime({time: submitForm(e, {drum_id, time, acquisition, transferee, startDate, endDate, fileUrl}) })
                     }>+</button>
                 </form>
             </div>
