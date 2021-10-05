@@ -1,67 +1,72 @@
-# import json
-# import serial
-# from web3 import Web3
-        # 
-    # except:
-        # print("Keyboard Interrupt")
-        # break
-# 
-# Getting the json file
-
-import json
-import uuid
-from web3 import Web3
-import codecs
-
-class EthereumHandler:
-    def get_address(self):
-        description = self.data_json['networks']['3']['address']
-        return (description)
-    def get_abi(self):
-        data_abi = self.data_json['abi']
-        return data_abi
-
-    def __init__(self):
-        self.data = open("../truffleSide/build/contracts/KCLOUD.json")
-        self.data_json = json.load(self.data)
+import serial
+import time
+from EthereumHandler import EthereumHandler
+from time import time, sleep
+ser = serial.Serial('/dev/ttyACM0', 115200)
+ser.flushInput()
+eth2 = EthereumHandler()
 
 
-        self.infura_provider = 'https://ropsten.infura.io/v3/f54c17f8fd334d78bcb2117202fe7ce0'
-        self.contract_address = self.get_address()
-        self.private_key_string = "7ae4495b934af72e8ce1d5792f98c119f1d831690ee27dcfeee4c077d7f4f7b3"    
 
-        self.w3 = Web3(Web3.HTTPProvider(self.infura_provider))
-        f = open("../truffleSide/build/contracts/KCLOUD.json")
 
+starttime = time()
+sensorId = 2
+
+def writeSensorDataToBlockchain():
+    try:
+        print("reading new value ...")
+        ser_bytes = ser.readline()
+        # decoded_bytes = float(ser_bytes[0:len(ser_bytes)-2].decode("utf-8"))
+        bytes_array = (ser_bytes.decode('utf-8')).split(',')
+        print(len(bytes_array))
+        dicID = {
+            "Sensor Id":0, 
+                "Date":1,
+                "Time":2,
+                "Latitude":3,
+                "Longitude":4,
+                "Acceleration X":5,
+                "Acceleration Y":6,
+                "Acceleration Z": 7,
+                "Temperature":8,
+                "Humidity":9,
+                "Radioactivity":10
+        }
+        dicValues = {
+                "Sensor Id":0, 
+                "Date":0,
+                "Time":0,
+                "Latitude":0,
+                "Longitude":0,
+                "Acceleration X":0,
+                "Acceleration Y":0,
+                "Acceleration Z":0,
+                "Temperature":0,
+                "Humidity":0,
+                "Radioactivity":0
+        }
+        if (len(bytes_array) == 11):
+            print(bytes_array)
+            for key in dicID:
+                id = dicID[key]
+                dicValues[id] = bytes_array[id] if bytes_array[id] else "0"
+                numeric_filter = filter(str.isdigit, dicValues[id])
+                numeric_string = "".join(numeric_filter)
+                dicValues[id] = int(numeric_string)
+                print(key + " is "+ str(dicValues[id]))
+        else:
+            for key in dicID:
+                id = dicID[key]
+                dicValues[id] = 0
+        eth2.passSensorData(sensorId, dicValues["Time"], \
+            dicValues["Latitude"], dicValues["Longitude"], dicValues["Acceleration X"], \
+            dicValues["Acceleration Y"], dicValues["Acceleration Z"], dicValues["Temperature"], \
+            dicValues["Humidity"], dicValues["Radioactivity"], 0)
         
 
-        self.KCLOUD = self.w3.eth.contract(address = self.contract_address, abi = self.get_abi())
- 
-        self.private_key_bytes = Web3.toBytes(hexstr=self.private_key_string)
-        self.account = self.w3.eth.account.privateKeyToAccount(self.private_key_bytes)
-        
-    def passSensorData(self, _sensorId, _time, _latitude, _longitude, _accX, _accY, _accZ, _temp, _humi, _radio, _end):
-        dataId = int(uuid.uuid1().int>>64)
-        sensorId = int(_sensorId)
-        time = int(_time)
-        latitude = int(_latitude)
-        longitude = int(_longitude)
-        accX = int(_accX)
-        accY = int(_accY)
-        accZ = int(_accZ) 
-        temp = int(_temp) 
-        humi = int(_humi)
-        radio = int(_radio)
-        end = int(_end)
-        self.KCLOUD_txn = self.KCLOUD.functions.passSensorData(\
-            dataId, sensorId, time, latitude, longitude, accX, \
-            accY, accZ, temp, humi, radio)\
-        .buildTransaction({'chainId': 3, 'gas': 8000000, 'gasPrice': self.w3.toWei('20', 'gwei'), 'nonce': self.w3.eth.getTransactionCount(self.account._address)})
-       # self.KCLOUD_txn = self.KCLOUD.functions.passSensorData(_sensorId, _time, [_latitude, _longitude, _accX, _accY, _accZ, _temp, _humi, _radio]).buildTransaction({'chainId': 3, 'gas': 8000000, 'gasPrice': self.w3.toWei('20', 'gwei'), 'nonce': self.w3.eth.getTransactionCount(self.account._address), 'value': 0})
+    except Exception as e:
+        print(e)
 
-
-        signed_txn = self.w3.eth.account.sign_transaction(self.KCLOUD_txn, private_key = self.private_key_bytes)
-
-        self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
-
-        print(self.KCLOUD_txn)
+while True:
+    writeSensorDataToBlockchain()
+    sleep(120.0 - ((time() - starttime) % 120.0))
