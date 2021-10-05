@@ -1,0 +1,41 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: kcloud
+    network: ropsten
+    source:
+      address: "0x7cc4FcCe2c3880Ca44d430763E3AB63A0FdDEb00"
+      abi: kcloud
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DrumInTransit
+        - DrumPackaged
+        - GPSDataEvent
+        - NewDrumEnrolled
+        - SensorDataEvent
+        - TakingOver
+        - TemporaryStorage
+      abis:
+        - name: kcloud
+          file: ./abis/kcloud.json
+      eventHandlers:
+        - event: DrumInTransit(uint256,uint256,string,string)
+          handler: handleDrumInTransit
+        - event: DrumPackaged(uint256,uint256,string,string,uint256,string,uint256,string)
+          handler: handleDrumPackaged
+        - event: GPSDataEvent(uint256,uint256,uint256,uint256)
+          handler: handleGPSDataEvent
+        - event: NewDrumEnrolled(uint256,uint256,uint256)
+          handler: handleNewDrumEnrolled
+        - event: SensorDataEvent(uint256,uint256,string,string,uint256,uint256)
+          handler: handleSensorDataEvent
+        - event: TakingOver(uint256,uint256,string,string,string,string)
+          handler: handleTakingOver
+        - event: TemporaryStorage(uint256,uint256,uint256,uint256,uint256,string)
+          handler: handleTemporaryStorage
+      file: ./src/mapping.ts
