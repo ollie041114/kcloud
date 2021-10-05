@@ -6,87 +6,114 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { SubmitPic } from './SubmitPic';
 import DateTimePicker from 'react-datetime-picker';
-
+import { useEffect } from 'react';
+import { SubmitStepButton } from './submitStepButton';
+import { StartEndDate } from './StartEndDate';
+import { TextField } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 //submitPic = new SubmitPic();
-function submitForm(e, {drum_id, time, acquisition, transferee, startDate, endDate, fileUrl}){
 
-    e.preventDefault();
-    var time = Math.round(+new Date()/1000);
-    var t1 = Math.round(startDate.getTime());
-    var t2 = Math.round(endDate.getTime());
-    var schedule = "" + t1 + "finishat:"+t2;
 
-    const ethereumHandler = new EthereumHandler();
-    ethereumHandler._takingOver(drum_id, time, acquisition, transferee, schedule, 222, fileUrl.fileUrl);
-    return time;
-}
+function TakingOver(props) {
 
-function TakingOver() {
-        const [drum_id, setDrumId] = useState("");
+    const callbackReceipt = (childData) => {
+        setTransactionReceipt(childData);
+      };
+      
+      function submitForm(e, {drum_id, time, acquisition, transferee, startTime, endTime, fileUrl}){
+
+        e.preventDefault();
+        setTransactionHash("It was changed!");
+        var time = Math.round(+new Date()/1000);
+        var schedule = startTime + "finish at: "+ endTime;
+    
+        const ethereumHandler = new EthereumHandler();
+        // drum_id, time, acquisition, transferee, transportation_schedule, hash_waste_acceptance, fileUrl, globalCallback
+        ethereumHandler._takingOver(drum_id, time, acquisition, transferee, schedule, fileUrl, callbackReceipt);
+        return transactionHash;
+    }
+        const [drum_id, setDrumId] = useState(props.drumId);
         const [time, setTime] = useState(+new Date()/1000);       
         
         const [acquisition, setAcquisition] = useState();
         const [transferee, setTransferee] = useState();
         
-        const [startDate, setStartDate] = useState(+new Date());       
-        const [endDate, setEndDate] = useState(+new Date());
-
-
-        const [fileUrl, setFileUrl] = useState(""); 
-        const pic = useRef();
+        const [startTime, setStartTime] = useState();       
+        const [endTime, setEndTime] = useState();
+        const [transactionHash, setTransactionHash] = useState("Oh my goodness");
+        const [transactionReceipt, setTransactionReceipt] = useState(null);
+        const [fileUrl, setFileUrl] = useState("");
 
         function handleCallback (childData) {
-            setFileUrl({fileUrl: childData})
+            setFileUrl(childData)
+        }
+        
+        function ConditionForButton() {
+            if (transactionHash != "Oh my goodness" && transactionReceipt == null){
+                return true;} else{
+                    return false;
+                }
+        }
+
+        function CallbackForButton(e) {
+            submitForm(e, {drum_id, time, acquisition, transferee, startTime, endTime, fileUrl})
+        }
+        useEffect(() => {
+            if (transactionReceipt != null){
+                props.handleNext();
+            }
+          }, [transactionReceipt]); // Only re-run the effect if open changes
+          useEffect(() => {
+            console.log("Drum id in takingOver is "+drum_id);
+          }, [drum_id]); // Only re-run the effect if open changes
+        function startCallback(data) {
+            var date = new Date(data).getTime() / 1000
+            setStartTime(date);
+        }
+        function endCallback(data){
+            var date = new Date(data).getTime() / 1000
+            setEndTime(date);
         }
 
         return(
             <div style = {{marginBottom: "40px"}}>
 
                 <h2>Taking Over</h2>
-                <form id = "package-drum">
-                    <div className = "field">
-                        <label>Drum id: </label>
-                        <input type = "text" onChange={(e)=>
-                            setDrumId(e.target.value)
-                        }/>
-                    </div>
-
-                    <div className = "field">
-                        <label>Acquisition : </label>
-                        <input type = "text" onChange={(e)=>
-                            setAcquisition(e.target.value)
-                        }/>
-                    </div>
-
-                    <div className = "field">
-                        <label>Transferee: </label>
-                            <input type = "text" onChange={(e)=>
-                                setTransferee(e.target.value)
-                            }/>
-                    </div>
-
-                    <div className = "field">
-                        <label>Transportation schedule: </label>
-                        <div>
-                            <p style={{display:"inline-block", marginRight: "10px"}}>Start date: </p>
-                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setStartDate} value = {startDate} />
-                        </div>
-                        <div>
-                            <p style={{display:"inline-block", marginRight: "10px"}}>End date: </p>
-                            <DateTimePicker style={{display:"inline-block", marginLeft: "20px"}} onChange = {setEndDate} value = {endDate} />
-                        </div>
-                    </div>
-
-                  <div className = "field">
-                      <label> Waste acceptance request: </label>
-                      <SubmitPic ref={pic} parentCallback = {handleCallback} />
-                  </div>  
+                <Grid container spacing = {3}>
+                    <Grid item xs={12}>
+                        <TextField
+                            required
+                            id="firstName"
+                            name="firstName"
+                            label="Acquistion"
+                            fullWidth
+                            autoComplete="given-name"
+                            onChange={(data) => setAcquisition(data.target.value)}
+                        />
+                        </Grid>
+                        <Grid item xs={12}>
+                        <TextField
+                            required
+                            id="firstName"
+                            name="firstName"
+                            label="Transferee"
+                            fullWidth
+                            autoComplete="given-name"
+                            onChange={(data) => setTransferee(data.target.value)}
+                        /> 
+                    </Grid>
+                    
+                <Grid item xs = {12}>
+                <StartEndDate label = "Transportation Schedule" startCallback = {startCallback} endCallback = {endCallback}/>
+                </Grid>
+                <Grid item xs = {12}>                  
+                      <SubmitPic parentCallback = {handleCallback} />
+                </Grid>
                   
-                  <button onClick={(e)=>
-                        setTime({time: submitForm(e, {drum_id, time, acquisition, transferee, startDate, endDate, fileUrl}) })
-                    }>+</button>
-                </form>
+                
+                </Grid>
+                <SubmitStepButton CallbackForButton = {CallbackForButton} ConditionForButton = {ConditionForButton}/>
             </div>
         );
 };

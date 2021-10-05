@@ -6,31 +6,37 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { SubmitPic } from './SubmitPic';
 import DateTimePicker from 'react-datetime-picker';
-
-function submitForm(e, {drum_id, storageUniqueNumber, Longitude, Latitude, startDate, endDate}){
-    //console.log(drum_id.drum_id, sensor_id.sensor_id, time);
-    e.preventDefault();
-    //console.log(e);
-    var time = Math.round(+new Date()/1000);
+import { useEffect } from 'react';
+import { Button } from '@material-ui/core';
+import { SubmitStepButton } from './submitStepButton';
+function TemporaryStorage(props) {
+    function submitForm(e, {drum_id, storageUniqueNumber, Longitude, Latitude, startDate, endDate}){
+        //console.log(drum_id.drum_id, sensor_id.sensor_id, time);
+        e.preventDefault();
+        //console.log(e);
+        setTransactionHash("It was changed!");
+        var time = Math.round(+new Date()/1000);
+        
+        var startTime = (Math.floor(startDate.getTime() / 1000));
+        var endTime = (Math.floor(endDate.getTime() / 1000));
+        var storage_schedule = startTime + "finishat:" + endTime;
+        
+        var storage_id = storageUniqueNumber;
+        const ethereumHandler = new EthereumHandler();
     
-    var startTime = (Math.floor(startDate.getTime() / 1000));
-    var endTime = (Math.floor(endDate.getTime() / 1000));
-    var storage_schedule = startTime + "finishat:" + endTime;
+        var longitude = Longitude; 
+        var latitude = Latitude; 
     
-    var storage_id = storageUniqueNumber;
-    const ethereumHandler = new EthereumHandler();
+    
+        ethereumHandler._temporaryStorage(drum_id, time, longitude, latitude, storage_id, storage_schedule, callbackReceipt);
+        return transactionHash;
+    }
 
-    var longitude = Longitude; 
-    var latitude = Latitude; 
+    const callbackReceipt = (childData) => {
+        setTransactionReceipt(childData);
+      };
+        const [drum_id, setDrumId] = useState(props.drumId);
 
-
-    ethereumHandler._temporaryStorage(drum_id, time, longitude, latitude, storage_id, storage_schedule);
-    return time;
-}
-//submitPic = new SubmitPic();
-
-function TemporaryStorage() {
-        const [drum_id, setDrumId] = useState("");
         //const [sensor_id, setSensorId] = useState(""); 
         const [time, setTime] = useState(Math.round(+new Date()/1000));
         
@@ -39,17 +45,30 @@ function TemporaryStorage() {
         const [Latitude, setLatitude] = useState("");
         const [startDate, setStartDate] = useState(+new Date());
         const [endDate, setEndDate] = useState(+new Date());
+        const [transactionHash, setTransactionHash] = useState("Oh my goodness");
+        const [transactionReceipt, setTransactionReceipt] = useState(null);
         
+        function ConditionForButton() {
+            if (transactionHash != "Oh my goodness" && transactionReceipt == null){
+                return true;} else{
+                    return false;
+                }
+        }
+        function CallbackForButton(e) {
+            submitForm(e, {drum_id, storageUniqueNumber, Longitude, Latitude, startDate, endDate})
+        }
+        useEffect(() => {
+            if (transactionReceipt != null){
+                props.handleNext();
+            }
+          }, [transactionReceipt]); // Only re-run the effect if open changes
         return(
             <div style = {{marginBottom: "40px"}}>
 
                 <h2>Temporary Storage</h2>
                 <form id = "package-drum">
                     <div className = "field">
-                        <label>Drum id: </label>
-                        <input type = "text" onChange={(e)=>
-                            setDrumId(e.target.value)
-                        }/>
+                        <label>Drum id: {drum_id}</label>
                     </div>
 
                     <div className = "field">
@@ -90,9 +109,7 @@ function TemporaryStorage() {
                         </div>
                     </div>
 
-                    <button onClick={(e)=>
-                        setTime({time: submitForm(e, {drum_id, storageUniqueNumber, Longitude, Latitude, startDate, endDate}) })
-                    }>+</button>
+                    <SubmitStepButton CallbackForButton = {CallbackForButton} ConditionForButton = {ConditionForButton}/>
                 </form>
             </div>
         );

@@ -11,217 +11,198 @@ import FastfoodIcon from '@material-ui/icons/Fastfood';
 import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import HotelIcon from '@material-ui/icons/Hotel';
 import RepeatIcon from '@material-ui/icons/Repeat';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { useStyles } from '../styling';
-import { Drawer } from '@material-ui/core';
+import Drawer from '../components/Drawer';
 import AirportShuttleIcon from '@material-ui/icons/AirportShuttle';
 import BrandingWatermarkTwoToneIcon from '@material-ui/icons/BrandingWatermarkTwoTone';
 import PanToolTwoToneIcon from '@material-ui/icons/PanToolTwoTone';
 import TimelapseTwoToneIcon from '@material-ui/icons/TimelapseTwoTone';
 import FeaturedVideoTwoToneIcon from '@material-ui/icons/FeaturedVideoTwoTone';
+import { getExtendedDrumData } from '../queries/structuredQuery';
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useState } from 'react';
 
 
-var itemsList = [{
-            text: "Enrolled",
-            icon: <BrandingWatermarkTwoToneIcon />,
-            color: "grey"
-        }, {
-            text: "Packaged",
-            icon: <FeaturedVideoTwoToneIcon />,
-            color: "grey"},
-        {
-            text: 'In Transit',
-            icon: <AirportShuttleIcon />,
-            color: "grey"
-        }, {
-            text: 'Taken Over',
-            icon: <PanToolTwoToneIcon />,
-            color: "grey", 
-            text: 'In Temporary Storage',
-            icon: <TimelapseTwoToneIcon />,
-            color: "grey"
-        }];
-export default function DrumHistory(props) {
+var itemsList = [];
 
-
-    function getItemsList(drum) {
-
-        var packagingData;
-        var inTransitData; 
-        var takingOverData;
-        var temporaryStorageData;
-        var history = drum.drumHistory[0];
-        var missing_label = "not yet available";
-        if (history.packagingData) {packagingData = history.packagingData} else {
-            packagingData = {
-                classification: missing_label, 
-                date_unix: missing_label,
-                place_of_occurence: missing_label,
-                type: missing_label, 
-                wasteAcceptanceRequest: missing_label
-            }
-        };
-        if (history.inTransitData) {inTransitData = history.inTransitData} else {
-            inTransitData = {carrier: missing_label, 
-            transportation_schedule: missing_label,
-            status: missing_label,
-            type: missing_label
-        }
-        };
-        if (history.takingOverData) {takingOverData = history.takingOverData} {
-            takingOverData = {
-                acquisition: missing_label, 
-                transferee: missing_label,
-                transportation_schedule: missing_label,
-                wasteAcceptanceRequest: missing_label
-            }
-        };
-        if (history.temporaryStorageData) {temporaryStorageData = history.temporaryStorageData} {
-            temporaryStorageData = {
-                storage_id: missing_label, 
-                longitude: missing_label,
-                latitude: missing_label,
-                storage_schedule: missing_label
-            };
-        };
-        
-        var itemsList = [{
-            text: "Enrolled",
-            icon: <BrandingWatermarkTwoToneIcon />,
-            color: "grey",
-            data: {
-                id: drum.id, 
-                sensorId: 5
-            }
-        }, {
-            text: "Packaged",
-            icon: <FeaturedVideoTwoToneIcon />,
-            color: "grey",
-            data: {
-                classification: packagingData.classification, 
-                date_unix: packagingData.date_unix,
-                place_of_occurence: packagingData.place_of_occurence,
-                type: packagingData.type, 
-                wasteAcceptanceRequest: packagingData.wasteAcceptanceRequest
-            }
-        }, {
-            text: 'In Transit',
-            icon: <AirportShuttleIcon />,
-            color: "grey",
-            data: {
-                carrier: inTransitData.carrier, 
-                transportation_schedule: inTransitData.transportation_schedule,
-                status: inTransitData.status,
-                type: inTransitData.type
-            }
-        }, {
-            text: 'Taken Over',
-            icon: <PanToolTwoToneIcon />,
-            color: "grey",
-            data: {
-                acquisition: takingOverData.acquisition, 
-                transferee: takingOverData.transferee,
-                transportation_schedule: takingOverData.transportation_schedule,
-                wasteAcceptanceRequest: takingOverData.wasteAcceptanceRequest
-            }
-        }, {
-            text: 'In Temporary Storage',
-            icon: <TimelapseTwoToneIcon />,
-            color: "grey",
-            data: {
-                storage_id: temporaryStorageData.storage_id, 
-                longitude: temporaryStorageData.longitude,
-                latitude: temporaryStorageData.latitude,
-                storage_schedule: temporaryStorageData.storage_schedule
-            }
-        }];
-        return itemsList;
+function BasicInfo(props) {
+    var drum = props.drum;
+    return (
+        <div style={{float: "right"}}>
+            <Typography variant="h5" gutterBottom>
+                Drum No. {drum.id}
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+                Current Status: {drum.currentStatus}
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+                from: {drum.place_of_occurence}
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom>
+                Classification: {drum.classification}
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom>
+                Type: {drum.type}
+            </Typography>
+        </div>
+    );
 }
 
-
-
-
-
-  const [drum, setDrum] = useState(0);
-  const classes = useStyles();
-  //const drum = props.state.drum;
-  const location = useLocation();
-  useEffect(() => {
-    setDrum(location.state.drumsy);
-    console.log(location.state.drumsy);
-    // var list = getItemsList(location.state.drumsy);
-    // console.log("list is"+ list);
-    // console.log("Drum is"+ drum.id);
-    console.log(location.pathname); // result: '/secondpage'
-    console.log(location.search); // result: '?query=abc'
-    console.log(typeof location.state.drumsy);
-    console.log(location.state.drumsy.drumHistory[0].packagingData.classification);
-    if(typeof location.state.drumsy !== "undefined"){
-        itemsList = getItemsList(location.state.drumsy);
-    }
- }, [location]); 
-
- console.log("dummy is"+drum);
-  return (
-
-      <div className = {classes.root}>
-          <Drawer>
-          </Drawer>
-          <div className = {classes.content}>
-          <div className={classes.toolbar} />
-          
-            <Timeline align="left">   
-            {
-            itemsList.map((item, index) => {
-                var out = '';
-                for (var p in item.data) {
-                    out += p + ': ' + item.data[p] + '\n';
-                  }
-                var {text, icon, color, data} = item;
-                
-                if (drum.currentStatus == text){
-                    color = "primary"
+function DisplayInformation(props) {
+    var obj = props.obj;
+    console.log("object is");
+    console.log(obj);
+    if (typeof obj !== 'undefined' && obj) {
+        var toReturn = [];
+        for (const key in obj) {
+            if (obj[key]) {
+                if (obj[key].toString().includes('https')) {
+                    toReturn.push(<Typography>{key} :</Typography>);
+                    toReturn.push(<img src={obj[key]} width="200px" />);
+                } else {
+                    toReturn.push(<Typography>{key} : {obj[key]}</Typography>);
                 }
-                return (
+            } else {
+                toReturn.push(<Typography>{key}: missing</Typography>)
+            }
+        }
+        console.log(toReturn);
+        return (
+            toReturn.map((item, index) => {
+                return <div>{item}</div>;
+            })
+        );
+    } else {
+        return (
+            <h1>Oops...</h1>
+        )
+    }
+}
 
-            <TimelineItem>
-                <TimelineOppositeContent>
-                <Typography variant="body2" color="textSecondary">
-                {drum.id}
-                </Typography>
-                </TimelineOppositeContent>
-                <TimelineSeparator>
+export function DrumHistoryMini(props) {
+    var drumState = 0
+    var isMini = false
+    if (props.drum != null) {
+        drumState = props.drum
+    }
+    const [drum, setDrum] = useState(drumState);
+
+    var time;
+    const classes = useStyles();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname !== "/GoogleMaps") {
+            console.log(location);
+            setDrum(location.state.drumsy);
+            console.log(location.state.drumsy);
+            console.log(location.pathname);
+            console.log(location.search);
+            console.log(typeof location.state.drumsy);
+
+            if (typeof location.state.drumsy !== "undefined") {
+                itemsList = getExtendedDrumData(location.state.drumsy).fullDrumHistory;
+            }
+        }
+        else if (props.drum != null) {
+            setDrum(props.drum);
+            isMini = true;
+            console.log("I am not null!")
+            console.log(props.drum)
+            setDrum(props.drum);
+            if (typeof props.drum !== "undefined") {
+                itemsList = getExtendedDrumData(props.drum).fullDrumHistory;
+            }
+        }
+    }, [location]);
 
 
-                <TimelineDot color = {color}>
-                    {icon}
-                </TimelineDot>
+    var date;
+    var time;
+    itemsList.map((item, index) => {
+        var { text, icon, color, data } = item;
+    });
+    console.log("dummy is" + drum);
+    console.log('isMini is '+ props.isMini);
+    return (
+        <div className = {!props.isMini ? classes.drumHistoryWrapper : classes.MinidrumHistoryWrapper}>
+            <div className = {!props.isMini ? classes.drumHistoryOne : classes.MinidrumHistoryOne}>
+                {
+                    props.showBasicInfo == true ?
+                        (
+                            <div className={classes.card} style={{ display: "inline-flex" }, { alignItems: "center" }, { maxWidth: "11px" }}>
+                                <BasicInfo drum={drum} />
+                            </div>
+                        ) : (
+                            <h1></h1>
+                        )
+                }
+            </div >
+            <div className = {!props.isMini ? classes.drumHistoryTwo : classes.MinidrumHistoryTwo}> 
+            {/* {!isMini ? 'drumHistoryTwo' : 'null'} */}
+                <Timeline>
+                    {
+                        itemsList.map((item, index) => {
+                            var { text, icon, color, data } = item;
+
+                            if (typeof data !== 'undefined') {
+                                date = (new Date(data.date_unix * 1000)).toLocaleDateString("en-US");
+                                time = (new Date(data.date_unix * 1000)).toLocaleTimeString("en-US");
+                            }
+                            if (drum.currentStatus == text) {
+                                color = "primary"
+                            }
+                            return (
+                                <TimelineItem>
+                                    <TimelineOppositeContent>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {date}
+                                        </Typography>
+                                    </TimelineOppositeContent>
+                                    <TimelineSeparator>
 
 
-                <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent>
-                <Paper elevation={3} className={classes.paper}>
-                    <Typography variant="h6" component="h1">
-                    {text}
-                    </Typography>
-                    
-                    <Typography>{out}</Typography>
-                </Paper>
-                </TimelineContent>
-            </TimelineItem>
-                );
-            })}
+                                        <TimelineDot color={color}>
+                                            {icon}
+                                        </TimelineDot>
 
 
-
-            
-            </Timeline>
+                                        <TimelineConnector color={color} />
+                                    </TimelineSeparator>
+                                    <TimelineContent>
+                                        <Paper elevation={3} className={classes.paper}>
+                                            <Typography variant="h6" component="h1">
+                                                {text}
+                                            </Typography>
+                                            <Typography variant="h12" component="h12" color="grey">
+                                                {date} {time}
+                                            </Typography>
+                                            <br /><br />
+                                            <DisplayInformation obj={data} />
+                                        </Paper>
+                                    </TimelineContent>
+                                </TimelineItem>
+                            );
+                        })}
+                </Timeline>
             </div>
-    </div>
-  );
+        </div>
+    );
+}
+export default function DrumHistory(props) {
+    const classes = useStyles();
+    return (
+        <div className={classes.root}>
+            <CssBaseline />
+            <Drawer />
+            <div className={classes.content}>
+                <div className={classes.toolbar} />
+                <DrumHistoryMini isMini = {false} showBasicInfo={true} />
+            </div>
+        </div>
+    );
 }

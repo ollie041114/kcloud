@@ -3,7 +3,7 @@ import { contract, signedTransaction, web3 } from "./signedTransact";
 class EthereumHandler {
     constructor(){}
 
-    _enrollment(drum_id, time, sensor_id) {
+    async _enrollment(drum_id, time, sensor_id, globalCallback) {
         const drum_id2 = parseInt(drum_id);
         const time2 = parseInt(time);
         const sensor_id2 = parseInt(sensor_id);
@@ -13,10 +13,10 @@ class EthereumHandler {
             web3.utils.toBN(time)
         )
         .encodeABI();
-        signedTransaction(func);
+        signedTransaction(func, globalCallback);
     }
 
-    _packaging(drum_id, time, classification, w_type, date_unix, place_of_occurence, dose_rate, fileUrl) {
+    _packaging(drum_id, time, classification, w_type, date_unix, place_of_occurence, dose_rate, fileUrl, globalCallback) {
         const func = contract.methods.packaging(
             web3.utils.toBN(drum_id), 
             web3.utils.toBN(time), 
@@ -28,10 +28,10 @@ class EthereumHandler {
             fileUrl.toString()
             )
             .encodeABI();
-        signedTransaction(func);
+            signedTransaction(func, globalCallback);
     }
 
-    _transit(drum_id, time, carrier, transportation_schedule) {
+    _transit(drum_id, time, carrier, transportation_schedule, globalCallback) {
         const func = contract.methods.transit(
             web3.utils.toBN(drum_id), 
             web3.utils.toBN(time), 
@@ -39,10 +39,10 @@ class EthereumHandler {
             transportation_schedule.toString()
             )
             .encodeABI();
-        signedTransaction(func);
+            signedTransaction(func, globalCallback);
     }
 
-    _temporaryStorage(drum_id, time, longitude, latitude, storage_id, storage_schedule) {
+    _temporaryStorage(drum_id, time, longitude, latitude, storage_id, storage_schedule, globalCallback) {
         const func = contract.methods.temporaryStorage(
             web3.utils.toBN(drum_id), 
             web3.utils.toBN(time), 
@@ -52,21 +52,20 @@ class EthereumHandler {
             storage_schedule.toString()
             )
             .encodeABI();
-        signedTransaction(func);
+            signedTransaction(func, globalCallback);
     }
 
-    _takingOver(drum_id, time, acquisition, transferee, transportation_schedule, hash_waste_acceptance, fileUrl) {
+    _takingOver(drum_id, time, acquisition, transferee, transportation_schedule, fileUrl, globalCallback) {
         const func = contract.methods.takingOver(
             web3.utils.toBN(drum_id), 
             web3.utils.toBN(time), 
             acquisition.toString(), 
             transferee.toString(), 
             transportation_schedule.toString(), 
-            web3.utils.toBN(hash_waste_acceptance),
             fileUrl.toString()
             )
             .encodeABI();
-        signedTransaction(func);
+            signedTransaction(func, globalCallback);
     }
 }
 

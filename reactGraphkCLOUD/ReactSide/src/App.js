@@ -13,10 +13,11 @@ import {
 } from "@apollo/client";
 import Registration from './pages/Registration';
 import DrumHistory from './pages/DrumHistory';
-
+import GoogleMaps from './pages/GoogleMaps';
+import SensorData from './pages/SensorData'
 function App() {
   const client = new ApolloClient({
-    uri: 'https://api.studio.thegraph.com/query/3034/kcloud/v0.0.4',
+    uri: 'https://api.studio.thegraph.com/query/3034/kcloud/v0.0.7',
     cache: new InMemoryCache()
   })
 
@@ -27,6 +28,8 @@ function App() {
           <Route exact from = "/" render ={props => <Registration{...props} />  }/>
           <Route exact path= "/Explorer" render ={props => <Explorer{...props} />  }/>
           <Route exact path= "/Explorer/DrumHistory" render ={props => <DrumHistory{...props} />  }/>
+          <Route exact path= "/GoogleMaps" render ={props => <GoogleMaps{...props} />  }/>
+          <Route exact path= "/SensorData" render ={props => <SensorData{...props} />  }/>
         </Switch>
         </Router>
       </ApolloProvider>

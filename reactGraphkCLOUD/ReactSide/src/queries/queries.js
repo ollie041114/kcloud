@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 const getQuery = gql`
     {
         temporaryStorageDatas{
@@ -22,15 +22,12 @@ const getBooksQuery = gql`
         classification
         type
         place_of_occurence
-
         drumHistory {
             inTransitData{
+                date_unix
                 carrier
                 transportation_schedule
                 status
-                drum {
-                  id
-                }
             }
             packagingData{
                 classification
@@ -40,11 +37,13 @@ const getBooksQuery = gql`
                 wasteAcceptanceRequest
             }
             temporaryStorageData{
+                date_unix
                 longitude
                 latitude
                 storage_schedule
             }
             takingOverData{
+                date_unix
 				acquisition
                 transferee
                 transportation_schedule
@@ -54,5 +53,5 @@ const getBooksQuery = gql`
     }
   }`
 
-  export {getBooksQuery, getQuery};
+export { getBooksQuery, getQuery };
 
