@@ -147,7 +147,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "drum_id",
+        "name": "sensor_id",
         "type": "uint256"
       },
       {
@@ -158,30 +158,73 @@
       },
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "what",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "message",
-        "type": "string"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
-        "name": "value",
+        "name": "data_id",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "expected_value",
+        "name": "latitude",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "longitude",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "accX",
         "type": "uint256"
       }
     ],
     "name": "SensorDataEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "data_id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "accZ",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "temp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "humi",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "radio",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "alarm",
+        "type": "string"
+      }
+    ],
+    "name": "SensorDataEvent2",
     "type": "event"
   },
   {
@@ -354,12 +397,17 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256[]",
-        "name": "sensor_data",
-        "type": "uint256[]"
+        "internalType": "string",
+        "name": "carrier",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "transportation_schedule",
+        "type": "string"
       }
     ],
-    "name": "passSensorData",
+    "name": "transit",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -368,7 +416,36 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "drum_id",
+        "name": "sensor_id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "radio",
+        "type": "uint256"
+      }
+    ],
+    "name": "checkRadio",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "data_id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "sensor_id",
         "type": "uint256"
       },
       {
@@ -377,27 +454,47 @@
         "type": "uint256"
       },
       {
-        "internalType": "string",
-        "name": "acquisition",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "latitude",
+        "type": "uint256"
       },
       {
-        "internalType": "string",
-        "name": "transferee",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "longitude",
+        "type": "uint256"
       },
       {
-        "internalType": "string",
-        "name": "transportation_schedule",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "accX",
+        "type": "uint256"
       },
       {
-        "internalType": "string",
-        "name": "waste_acceptance_handover",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "accY",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "accZ",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "temp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "humi",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "radio",
+        "type": "uint256"
       }
     ],
-    "name": "takingOver",
+    "name": "passSensorData",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -454,16 +551,26 @@
       },
       {
         "internalType": "string",
-        "name": "carrier",
+        "name": "acquisition",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "transferee",
         "type": "string"
       },
       {
         "internalType": "string",
         "name": "transportation_schedule",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "waste_acceptance_handover",
+        "type": "string"
       }
     ],
-    "name": "transit",
+    "name": "takingOver",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

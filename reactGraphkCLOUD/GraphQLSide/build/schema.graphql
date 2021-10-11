@@ -10,13 +10,13 @@ type Drum @entity {
   wasteAcceptanceHandover: String
 
   currentStatus: String
-  drumHistory: [DrumHistory]!@derivedFrom(field: "drum")
+  drumHistory: [DrumHistory!]!@derivedFrom(field: "drum")
 }
 
 type DrumHistory @entity {
   id: ID!
   drum: Drum!
-  sensor_data: [SensorData]!@derivedFrom(field: "drum")
+  sensor_data: [SensorData!]!@derivedFrom(field: "drum")
   inTransitData: InTransitData
   packagingData: PackagingData
   temporaryStorageData: TemporaryStorageData

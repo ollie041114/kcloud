@@ -6,11 +6,11 @@ dataSources:
     name: kcloud
     network: ropsten
     source:
-      address: "0x7cc4FcCe2c3880Ca44d430763E3AB63A0FdDEb00"
+      address: "0x53933243Bb9990603F228Dfdb5bE47a043395443"
       abi: kcloud
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DrumInTransit
@@ -22,7 +22,7 @@ dataSources:
         - TemporaryStorage
       abis:
         - name: kcloud
-          file: ./abis/kcloud.json
+          file: build/kcloud/abis/kcloud.json
       eventHandlers:
         - event: DrumInTransit(uint256,uint256,string,string)
           handler: handleDrumInTransit
@@ -32,8 +32,10 @@ dataSources:
           handler: handleGPSDataEvent
         - event: NewDrumEnrolled(uint256,uint256,uint256)
           handler: handleNewDrumEnrolled
-        - event: SensorDataEvent(uint256,uint256,string,string,uint256,uint256)
+        - event: SensorDataEvent(uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleSensorDataEvent
+        - event: SensorDataEvent2(uint256,uint256,uint256,uint256,uint256,string)
+          handler: handleSensorDataEvent2
         - event: TakingOver(uint256,uint256,string,string,string,string)
           handler: handleTakingOver
         - event: TemporaryStorage(uint256,uint256,uint256,uint256,uint256,string)
