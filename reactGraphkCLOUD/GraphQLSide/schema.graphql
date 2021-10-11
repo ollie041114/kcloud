@@ -1,6 +1,6 @@
 type Drum @entity {
   id: ID!
-  sensor: Sensor@derivedFrom(field: "drum")
+  sensor: Sensor
   classification: String
   type: String 
   date_unix: BigInt 
@@ -8,15 +8,14 @@ type Drum @entity {
   dose_rate: BigInt
   wasteAcceptanceRequest: String 
   wasteAcceptanceHandover: String
-
   currentStatus: String
-  drumHistory: [DrumHistory]!@derivedFrom(field: "drum")
+  drumHistory: [DrumHistory!]@derivedFrom(field: "drum")
 }
 
 type DrumHistory @entity {
   id: ID!
   drum: Drum!
-  sensor_data: [SensorData]!@derivedFrom(field: "drum")
+  sensor_data: [SensorData!]!@derivedFrom(field: "drum")
   inTransitData: InTransitData
   packagingData: PackagingData
   temporaryStorageData: TemporaryStorageData
@@ -25,30 +24,24 @@ type DrumHistory @entity {
 
 type Sensor @entity {
   id: ID!
-  drum: Drum! 
+  drum: Drum
+  sensorData: [SensorData!]@derivedFrom(field: "sensor")
 }
 
 type SensorData @entity {
   id: ID!
-  sensor: Sensor!
-  time_recorded: BigInt!
-  drum: DrumHistory!
-  status: String!
-
-  cWLiquidD_CS: BigDecimal!
-  cWLiquidD_PS: BigDecimal! 
-  WFilterD_CS: BigDecimal! 
-  WResinD_CS: BigDecimal! 
-  paper_compression: BigDecimal!
-  
-  cWLiquidD_CS_Status: BigDecimal!
-  cWLiquidD_PS_Status: BigDecimal! 
-  WFilterD_CS_Status: BigDecimal! 
-  WResinD_CS_Status: BigDecimal! 
-  paper_compression_Status: BigDecimal!
-  
+  sensor: Sensor
+  currentStatus: String
+  drum: DrumHistory
+  time_recorded: BigInt
   GPS_longitude: BigInt
-  GPS_Latitude: BigInt 
+  GPS_Latitude: BigInt
+  accX: BigInt 
+  accZ: BigInt 
+  temp: BigInt 
+  humidity: BigInt 
+  radio: BigInt
+  alarm: String
 }
 
 type InTransitData @entity @key(fields: "id") @key(fields: "drum"){

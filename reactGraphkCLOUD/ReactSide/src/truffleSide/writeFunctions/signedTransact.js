@@ -10,8 +10,10 @@ const privateKey1 = Buffer.from('7ae4495b934af72e8ce1d5792f98c119f1d831690ee27dc
 
 
   // Create a JavaScript representation of the smart contract
-const contractABI = require('../build/contracts/KCLOUD.json');
-const contractAddress = '0x7d1000d41dfa26d10dccf90f30dbc2b0f94f3d1e';
+const contractJSON = require('reactGraphkCLOUD/truffleSide/build/contracts/KCLOUD.json');
+const contractABI = contractJSON['abi']
+const contractAddress = contractJSON['networks']['3']['address'];
+
 export const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 

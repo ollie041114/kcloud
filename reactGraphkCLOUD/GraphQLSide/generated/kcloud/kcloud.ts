@@ -155,7 +155,7 @@ export class SensorDataEvent__Params {
     this._event = event;
   }
 
-  get drum_id(): BigInt {
+  get sensor_id(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
@@ -163,20 +163,58 @@ export class SensorDataEvent__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get what(): string {
-    return this._event.parameters[2].value.toString();
+  get data_id(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 
-  get message(): string {
-    return this._event.parameters[3].value.toString();
+  get latitude(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
   }
 
-  get value(): BigInt {
+  get longitude(): BigInt {
     return this._event.parameters[4].value.toBigInt();
   }
 
-  get expected_value(): BigInt {
+  get accX(): BigInt {
     return this._event.parameters[5].value.toBigInt();
+  }
+}
+
+export class SensorDataEvent2 extends ethereum.Event {
+  get params(): SensorDataEvent2__Params {
+    return new SensorDataEvent2__Params(this);
+  }
+}
+
+export class SensorDataEvent2__Params {
+  _event: SensorDataEvent2;
+
+  constructor(event: SensorDataEvent2) {
+    this._event = event;
+  }
+
+  get data_id(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get accZ(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get temp(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get humi(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get radio(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
+
+  get alarm(): string {
+    return this._event.parameters[5].value.toString();
   }
 }
 
@@ -259,6 +297,38 @@ export class TemporaryStorage__Params {
 export class kcloud extends ethereum.SmartContract {
   static bind(address: Address): kcloud {
     return new kcloud("kcloud", address);
+  }
+
+  checkRadio(sensor_id: BigInt, radio: BigInt): string {
+    let result = super.call(
+      "checkRadio",
+      "checkRadio(uint256,uint256):(string)",
+      [
+        ethereum.Value.fromUnsignedBigInt(sensor_id),
+        ethereum.Value.fromUnsignedBigInt(radio)
+      ]
+    );
+
+    return result[0].toString();
+  }
+
+  try_checkRadio(
+    sensor_id: BigInt,
+    radio: BigInt
+  ): ethereum.CallResult<string> {
+    let result = super.tryCall(
+      "checkRadio",
+      "checkRadio(uint256,uint256):(string)",
+      [
+        ethereum.Value.fromUnsignedBigInt(sensor_id),
+        ethereum.Value.fromUnsignedBigInt(radio)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
   }
 }
 
@@ -358,6 +428,86 @@ export class PackagingCall__Outputs {
   }
 }
 
+export class TransitCall extends ethereum.Call {
+  get inputs(): TransitCall__Inputs {
+    return new TransitCall__Inputs(this);
+  }
+
+  get outputs(): TransitCall__Outputs {
+    return new TransitCall__Outputs(this);
+  }
+}
+
+export class TransitCall__Inputs {
+  _call: TransitCall;
+
+  constructor(call: TransitCall) {
+    this._call = call;
+  }
+
+  get drum_id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get time(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get carrier(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+
+  get transportation_schedule(): string {
+    return this._call.inputValues[3].value.toString();
+  }
+}
+
+export class TransitCall__Outputs {
+  _call: TransitCall;
+
+  constructor(call: TransitCall) {
+    this._call = call;
+  }
+}
+
+export class CheckRadioCall extends ethereum.Call {
+  get inputs(): CheckRadioCall__Inputs {
+    return new CheckRadioCall__Inputs(this);
+  }
+
+  get outputs(): CheckRadioCall__Outputs {
+    return new CheckRadioCall__Outputs(this);
+  }
+}
+
+export class CheckRadioCall__Inputs {
+  _call: CheckRadioCall;
+
+  constructor(call: CheckRadioCall) {
+    this._call = call;
+  }
+
+  get sensor_id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get radio(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class CheckRadioCall__Outputs {
+  _call: CheckRadioCall;
+
+  constructor(call: CheckRadioCall) {
+    this._call = call;
+  }
+
+  get value0(): string {
+    return this._call.outputValues[0].value.toString();
+  }
+}
+
 export class PassSensorDataCall extends ethereum.Call {
   get inputs(): PassSensorDataCall__Inputs {
     return new PassSensorDataCall__Inputs(this);
@@ -375,16 +525,48 @@ export class PassSensorDataCall__Inputs {
     this._call = call;
   }
 
-  get drum_id(): BigInt {
+  get data_id(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get time(): BigInt {
+  get sensor_id(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get sensor_data(): Array<BigInt> {
-    return this._call.inputValues[2].value.toBigIntArray();
+  get time(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get latitude(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get longitude(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get accX(): BigInt {
+    return this._call.inputValues[5].value.toBigInt();
+  }
+
+  get accY(): BigInt {
+    return this._call.inputValues[6].value.toBigInt();
+  }
+
+  get accZ(): BigInt {
+    return this._call.inputValues[7].value.toBigInt();
+  }
+
+  get temp(): BigInt {
+    return this._call.inputValues[8].value.toBigInt();
+  }
+
+  get humi(): BigInt {
+    return this._call.inputValues[9].value.toBigInt();
+  }
+
+  get radio(): BigInt {
+    return this._call.inputValues[10].value.toBigInt();
   }
 }
 
@@ -392,56 +574,6 @@ export class PassSensorDataCall__Outputs {
   _call: PassSensorDataCall;
 
   constructor(call: PassSensorDataCall) {
-    this._call = call;
-  }
-}
-
-export class TakingOverCall extends ethereum.Call {
-  get inputs(): TakingOverCall__Inputs {
-    return new TakingOverCall__Inputs(this);
-  }
-
-  get outputs(): TakingOverCall__Outputs {
-    return new TakingOverCall__Outputs(this);
-  }
-}
-
-export class TakingOverCall__Inputs {
-  _call: TakingOverCall;
-
-  constructor(call: TakingOverCall) {
-    this._call = call;
-  }
-
-  get drum_id(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get time(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get acquisition(): string {
-    return this._call.inputValues[2].value.toString();
-  }
-
-  get transferee(): string {
-    return this._call.inputValues[3].value.toString();
-  }
-
-  get transportation_schedule(): string {
-    return this._call.inputValues[4].value.toString();
-  }
-
-  get waste_acceptance_handover(): string {
-    return this._call.inputValues[5].value.toString();
-  }
-}
-
-export class TakingOverCall__Outputs {
-  _call: TakingOverCall;
-
-  constructor(call: TakingOverCall) {
     this._call = call;
   }
 }
@@ -496,20 +628,20 @@ export class TemporaryStorageCall__Outputs {
   }
 }
 
-export class TransitCall extends ethereum.Call {
-  get inputs(): TransitCall__Inputs {
-    return new TransitCall__Inputs(this);
+export class TakingOverCall extends ethereum.Call {
+  get inputs(): TakingOverCall__Inputs {
+    return new TakingOverCall__Inputs(this);
   }
 
-  get outputs(): TransitCall__Outputs {
-    return new TransitCall__Outputs(this);
+  get outputs(): TakingOverCall__Outputs {
+    return new TakingOverCall__Outputs(this);
   }
 }
 
-export class TransitCall__Inputs {
-  _call: TransitCall;
+export class TakingOverCall__Inputs {
+  _call: TakingOverCall;
 
-  constructor(call: TransitCall) {
+  constructor(call: TakingOverCall) {
     this._call = call;
   }
 
@@ -521,19 +653,27 @@ export class TransitCall__Inputs {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get carrier(): string {
+  get acquisition(): string {
     return this._call.inputValues[2].value.toString();
   }
 
-  get transportation_schedule(): string {
+  get transferee(): string {
     return this._call.inputValues[3].value.toString();
+  }
+
+  get transportation_schedule(): string {
+    return this._call.inputValues[4].value.toString();
+  }
+
+  get waste_acceptance_handover(): string {
+    return this._call.inputValues[5].value.toString();
   }
 }
 
-export class TransitCall__Outputs {
-  _call: TransitCall;
+export class TakingOverCall__Outputs {
+  _call: TakingOverCall;
 
-  constructor(call: TransitCall) {
+  constructor(call: TakingOverCall) {
     this._call = call;
   }
 }

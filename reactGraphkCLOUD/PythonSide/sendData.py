@@ -7,8 +7,6 @@ ser.flushInput()
 eth2 = EthereumHandler()
 
 
-
-
 starttime = time()
 sensorId = 2
 
@@ -62,11 +60,10 @@ def writeSensorDataToBlockchain():
             dicValues["Latitude"], dicValues["Longitude"], dicValues["Acceleration X"], \
             dicValues["Acceleration Y"], dicValues["Acceleration Z"], dicValues["Temperature"], \
             dicValues["Humidity"], dicValues["Radioactivity"], 0)
-        
 
     except Exception as e:
         print(e)
 
 while True:
     writeSensorDataToBlockchain()
-    sleep(120.0 - ((time() - starttime) % 120.0))
+    sleep(120.0)
