@@ -94,7 +94,7 @@ function getData() {
   let data = [];
 
   data.push({
-    title: 'Visits',
+    title: 'Sensor 1',
     data: getRandomDateArray(150)
   });
   
@@ -288,7 +288,7 @@ var [data, setData] = useState(getData());
             color="#3E517A"
           />
         </div>
-        <div className={classes.subChartWrapper}>
+        {/* <div className={classes.subChartWrapper}>
           <BarChart
             data={data[1].data}
             title={data[1].title}
@@ -308,7 +308,7 @@ var [data, setData] = useState(getData());
             title={data[3].title}
             colors={['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF']}
           />
-        </div>
+        </div> */}
       </div>
     );
 }

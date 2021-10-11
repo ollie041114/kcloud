@@ -59,10 +59,10 @@ function Body() {
         <Charts/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <Charts/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <Charts/>
       </TabPanel>
       <TabPanel value={value} index={3}>
         Item Four
