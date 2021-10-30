@@ -10,7 +10,7 @@ const privateKey1 = Buffer.from('7ae4495b934af72e8ce1d5792f98c119f1d831690ee27dc
 
 
   // Create a JavaScript representation of the smart contract
-const contractJSON = require('reactGraphkCLOUD/truffleSide/build/contracts/KCLOUD.json');
+const contractJSON = require('..\\..\\abi\\KCLOUD.json');
 const contractABI = contractJSON['abi']
 const contractAddress = contractJSON['networks']['3']['address'];
 

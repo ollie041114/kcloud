@@ -17,7 +17,7 @@ import GoogleMaps from './pages/GoogleMaps';
 import SensorData from './pages/SensorData'
 function App() {
   const client = new ApolloClient({
-    uri: 'https://api.studio.thegraph.com/query/3034/kcloud/v0.0.7',
+    uri: 'https://api.thegraph.com/subgraphs/name/ollie041114/kcloud',
     cache: new InMemoryCache()
   })
 

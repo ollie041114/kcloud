@@ -4,13 +4,10 @@ class EthereumHandler {
     constructor(){}
 
     async _enrollment(drum_id, time, sensor_id, globalCallback) {
-        const drum_id2 = parseInt(drum_id);
-        const time2 = parseInt(time);
-        const sensor_id2 = parseInt(sensor_id);
         const func = contract.methods.enrollment(
             web3.utils.toBN(drum_id),
-            web3.utils.toBN(parseInt(sensor_id)),
-            web3.utils.toBN(time)
+            web3.utils.toBN(time),
+            web3.utils.toBN(sensor_id)
         )
         .encodeABI();
         signedTransaction(func, globalCallback);

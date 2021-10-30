@@ -1,4 +1,5 @@
 import { BigInt } from "@graphprotocol/graph-ts";
+
 import {
   kcloud,
   DrumInTransit,
@@ -22,17 +23,14 @@ import {
 } from "../generated/schema";
 
 
-export function handleGPSDataEvent(event: GPSDataEvent): void {}
+export function handleGPSDataEvent(event: GPSDataEvent): void { }
 
 export function handleNewDrumEnrolled(event: NewDrumEnrolled): void {
   let new_drum = new Drum(event.params.drum_id.toHex());
   let new_sensor = new Sensor(event.params.sensor_id.toHex());
   new_drum.sensor = new_sensor.id;
   new_sensor.drum = new_drum.id;
-  let drumHistory = DrumHistory.load(event.params.drum_id.toHex());
-  if (drumHistory == null) {
-    drumHistory = new DrumHistory(event.params.drum_id.toHex());
-  }
+  let drumHistory = new DrumHistory(event.params.drum_id.toHex());
   drumHistory.drum = new_drum.id;
   new_drum.currentStatus = "Enrolled";
 
@@ -91,10 +89,9 @@ export function handleDrumInTransit(event: DrumInTransit): void {
       event.params.transportation_schedule;
     //inTransitData.status = event.params.;
     drumHistory.inTransitData = inTransitData.id;
-
-    my_drum.save();
     drumHistory.save();
     inTransitData.save();
+    my_drum.save();
   }
 }
 
@@ -128,51 +125,56 @@ export function handleTakingOver(event: TakingOver): void {
     takingOverData.save();
   }
 }
+class Container {
+  data: string | null
+}
 
 export function handleSensorDataEvent(event: SensorDataEvent): void {
-// emit SensorDataEvent(sensor_id, time, data_id, latitude, longitude, accX);
-// emit SensorDataEvent2(data_id, accZ, temp, humi, radio, alarm);
+  // emit SensorDataEvent(sensor_id, time, data_id, latitude, longitude, accX);
+  // emit SensorDataEvent2(data_id, accZ, temp, humi, radio, alarm);
 
 
   let sensor = Sensor.load(event.params.sensor_id.toHex());
-  if (sensor === null){
+  if (sensor === null) {
     let sensor = new Sensor(event.params.sensor_id.toHex());
   }
-  if(sensor){
+  if (sensor) {
     let sensorData = new SensorData(event.params.data_id.toHex());
-    if(sensor.id){
+    if (sensor.id) {
       sensorData.sensor = sensor.id;
     }
-    if (sensor.drum != null){
-      let drum = Drum.load(sensor.drum);
-        if (drum){
-          let currentStatus = drum.currentStatus;
-          sensorData.drum = sensor.drum;
-          sensorData.currentStatus = currentStatus; 
-        }
+    let container = new Container();
+    container.data = sensor.drum;
+    let data = container.data;
+    let drum_id: string = data?data:"1";
+    let drum = Drum.load(drum_id);
+    if (drum) {
+      let currentStatus = drum.currentStatus;
+      sensorData.drum = sensor.drum;
+      sensorData.currentStatus = currentStatus;
     }
     sensorData.time_recorded = event.params.time;
     sensorData.GPS_longitude = event.params.longitude;
     sensorData.GPS_Latitude = event.params.latitude;
     sensorData.accX = event.params.accX;
-    sensor.save()
-    sensorData.save()
+    sensor.save();
+    sensorData.save();
   }
 }
 
 export function handleSensorDataEvent2(event: SensorDataEvent2): void {
   // emit SensorDataEvent(sensor_id, time, data_id, latitude, longitude, accX);
   // emit SensorDataEvent2(data_id, accZ, temp, humi, radio, alarm);
-    let sensorData = SensorData.load(event.params.data_id.toHex());
-    if(sensorData){
-      sensorData.accZ = event.params.accZ;
-      sensorData.temp = event.params.temp;
-      sensorData.humidity = event.params.humi;
-      sensorData.radio = event.params.radio;
-      sensorData.alarm = event.params.alarm;
-      sensorData.save()
-    }
+  let sensorData = SensorData.load(event.params.data_id.toHex());
+  if (sensorData) {
+    sensorData.accZ = event.params.accZ;
+    sensorData.temp = event.params.temp;
+    sensorData.humidity = event.params.humi;
+    sensorData.radio = event.params.radio;
+    sensorData.alarm = event.params.alarm;
+    sensorData.save();
   }
+}
 
 export function handleTemporaryStorage(event: TemporaryStorage): void {
   let my_drum = Drum.load(event.params.drum_id.toHex());

@@ -5,6 +5,7 @@ import TimelapseTwoToneIcon from '@material-ui/icons/TimelapseTwoTone';
 import FeaturedVideoTwoToneIcon from '@material-ui/icons/FeaturedVideoTwoTone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFileAlt, faArchive, faShuttleVan, faPeopleCarry, faWarehouse} from '@fortawesome/free-solid-svg-icons'
+import { NoSchemaIntrospectionCustomRule } from 'graphql';
 
 export var itemsList = []
 
@@ -98,7 +99,7 @@ export function getExtendedDrumData(drum, props) {
             icon: <FontAwesomeIcon icon={faFileAlt}/>,
             color: ColorArray[0],
             data: {
-                id: drum.id,
+                id: drum.sensor.id,
                 sensorId: 5,
                 date_unix: drum.date_unix
             }
@@ -149,7 +150,25 @@ export function getExtendedDrumData(drum, props) {
             }
         }];
     var ExtendedStatus = itemsList[ExtendedStatusTracker];
-    
+    var sensorData = drum.sensor.sensorData;
+
+    var radio = sensorData.map(item => {
+        return item.radio;
+    })
+    var temp = sensorData.map(item => {
+        return item.temp
+    })
+    var humidity = sensorData.map(item => {
+        return item.humidity
+    })
+    var currentStatus = sensorData.map(item => {
+        return item.currentStatus
+    })
+    var time_recorded = sensorData.map(item=>{
+        return item.time_recorded
+    })
+
+
     var drumInformation = {
         basicInfo: {
             id: drum.id,
@@ -160,6 +179,14 @@ export function getExtendedDrumData(drum, props) {
             currentStatus: drum.currentStatus,
             icon: ExtendedStatus.icon,
         },
+        sensorData: {
+            sensor_id: drum.sensor.id,
+            radio: radio,
+            temp: temp,
+            humidity: humidity,
+            currentStatus: currentStatus,
+            time_recorded: time_recorded
+        }, 
         fullDrumHistory: itemsList,
         currentStatusInfo: ExtendedStatus, // Actually just an item in itemsList corresponding to current status
         location: {

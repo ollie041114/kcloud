@@ -8,7 +8,10 @@ import {
     ListItemText
 } from "@material-ui/core";
 import { useState } from "react";
+import { getExtendedDrumData } from '../queries/structuredQuery';
 import clsx from 'clsx';
+import { gql, useQuery } from "@apollo/client";
+import { getBooksQuery } from "../queries/queries";
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
@@ -59,22 +62,11 @@ import {
     SubTitle,
     registerables
   } from 'chart.js';
+import { isCompositeType } from "graphql";
   Chart.register(...registerables);
 
 
-  // Data generation
-function getRandomArray(numItems) {
-  // Create random array of objects
-  let names = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let data = [];
-  for(var i = 0; i < numItems; i++) {
-    data.push({
-      label: names[i],
-      value: Math.round(20 + 80 * Math.random())
-    });
-  }
-  return data;
-}
+
 
 function getRandomDateArray(numItems) {
   // Create random array of objects (with date)
@@ -90,29 +82,23 @@ function getRandomDateArray(numItems) {
   return data;
 }
 
-function getData() {
-  let data = [];
-
-  data.push({
-    title: 'Sensor 1',
-    data: getRandomDateArray(150)
-  });
-  
-  data.push({
-    title: 'Categories',
-    data: getRandomArray(20)
-  });
-
-  data.push({
-    title: 'Categories',
-    data: getRandomArray(10)
-  });
-
-  data.push({
-    title: 'Data 4',
-    data: getRandomArray(6)
-  });
-
+function getData(extendedDrum) {
+  var sensorData = extendedDrum.sensorData
+  console.log(sensorData);
+  // Create random array of objects
+  let mini_data = [];
+  for(var i = 0; i < sensorData.radio.length; i++) {
+    mini_data.push({
+      label: sensorData.radio[i],
+      value: sensorData.radio[i],
+      time: sensorData.time_recorded[i]
+    });
+  }
+  console.log(mini_data);
+  let data = {
+    title: 'Sensor '+extendedDrum.basicInfo.id,
+    data: mini_data
+  };
   return data;
 }
 
@@ -179,6 +165,7 @@ class LineChart extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.data);
     this.myChart = new Chart(this.canvasRef.current, {
       type: 'line',
       options: {
@@ -262,7 +249,9 @@ class DoughnutChart extends React.Component {
 
 // App
 export function Charts (props) {
-var [data, setData] = useState(getData());
+var drum = props.drum;
+var [data, setData] = useState(props.sensorData);
+console.log(data);
 //     constructor(props) {
 //     super(props);
 
@@ -283,8 +272,8 @@ var [data, setData] = useState(getData());
       <div className="App">
         <div className={classes.mainChartWrapper}>
           <LineChart
-            data={data[0].data}
-            title={data[0].title}
+            data={data.data}
+            title={data.title}
             color="#3E517A"
           />
         </div>

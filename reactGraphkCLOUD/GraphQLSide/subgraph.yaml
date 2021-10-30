@@ -8,9 +8,10 @@ dataSources:
     source:
       address: "0x53933243Bb9990603F228Dfdb5bE47a043395443"
       abi: kcloud
+      startBlock: 11100000
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
         - DrumInTransit

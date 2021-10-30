@@ -17,6 +17,21 @@ const getBooksQuery = gql`
 {
     drums {
         id
+        sensor{
+            id
+            sensorData{
+                currentStatus 
+                time_recorded
+                GPS_longitude
+                GPS_Latitude 
+                accX
+                accZ 
+                temp 
+                humidity
+                radio
+                alarm
+            }
+        }
         currentStatus
         date_unix
         classification

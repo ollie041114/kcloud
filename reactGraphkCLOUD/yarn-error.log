@@ -1,0 +1,103 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\ollie\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js install
+
+PATH: 
+  C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\MATLAB\R2020a\bin;C:\Program Files\Git\cmd;C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin\;C:\Program Files\IVI Foundation\VISA\Win64\Bin\;C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Users\ollie\.cargo\bin;C:\Users\ollie\AppData\Local\Microsoft\WindowsApps;C:\Users\ollie\AppData\Local\Programs\MiKTeX\miktex\bin\x64\;C:\Program Files\JetBrains\CLion 2021.1.1\bin;;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\Git\mingw32\bin;C:\Users\ollie\Downloads\MinGW\bin;C:\Users\ollie\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\ollie\OneDrive - unist.ac.kr\Desktop\Apps\flutter\bin;C:\Users\ollie\AppData\Roaming\npm;
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  14.17.3
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: getaddrinfo EAI_AGAIN registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:69:26)
+
+npm manifest: 
+  {
+    "name": "reactGraphkCLOUD",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@apollo/client": "^3.4.2",
+      "@date-io/date-fns": "v1",
+      "@emotion/react": "^11.4.1",
+      "@emotion/styled": "^11.3.0",
+      "@fortawesome/fontawesome-svg-core": "^1.2.36",
+      "@fortawesome/free-solid-svg-icons": "^5.15.4",
+      "@fortawesome/react-fontawesome": "^0.1.15",
+      "@graphprotocol/graph-cli": "^0.16.2",
+      "@graphprotocol/graph-ts": "^0.16.0",
+      "@material-ui/core": "^4.12.3",
+      "@material-ui/icons": "^4.11.2",
+      "@material-ui/lab": "^4.0.0-alpha.60",
+      "@material-ui/pickers": "^3.3.10",
+      "@mui/icons-material": "^5.0.0",
+      "@mui/material": "^5.0.0",
+      "@openzeppelin/contracts": "^4.2.0",
+      "@testing-library/jest-dom": "^5.11.4",
+      "@testing-library/react": "^11.1.0",
+      "@testing-library/user-event": "^12.1.10",
+      "@truffle/hdwallet-provider": "^1.5.0",
+      "@types/react-router-dom": "^5.1.8",
+      "autosuggest-highlight": "^3.1.1",
+      "chart.js": "^3.5.1",
+      "ganache-cli": "^6.12.2",
+      "graphql": "^15.5.1",
+      "ipfs-http-client": "^51.0.1",
+      "react": "^17.0.2",
+      "react-datepicker": "^4.2.1",
+      "react-datetime-picker": "^3.3.0",
+      "react-dom": "^17.0.2",
+      "react-google-maps": "^9.4.5",
+      "react-icons": "^4.2.0",
+      "react-router-dom": "^5.2.0",
+      "react-scripts": "4.0.3",
+      "react-window": "^1.8.6",
+      "styled-components": "^5.3.0",
+      "truffle-hdwallet-provider": "^1.0.17",
+      "typescript": "^4.3.5",
+      "web-vitals": "^1.0.1",
+      "web3": "^1.5.0"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "prepare:ropsten": "mustache config/ropsten.json subgraph.template.yaml > subgraph.yaml"
+    },
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "devDependencies": {
+      "@babel/core": "^7.15.0",
+      "@babel/preset-env": "^7.15.0",
+      "mustache": "^3.1.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

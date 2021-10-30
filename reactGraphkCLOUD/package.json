@@ -10,8 +10,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.15",
-    "@graphprotocol/graph-cli": "0.18.0",
-    "@graphprotocol/graph-ts": "^0.22.1",
+    "@graphprotocol/graph-cli": "^0.16.2",
+    "@graphprotocol/graph-ts": "^0.16.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
@@ -48,7 +48,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepare:ropsten": "mustache config/ropsten.json subgraph.template.yaml > subgraph.yaml"
   },
   "eslintConfig": {
     "extends": [
@@ -70,6 +71,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
-    "@babel/preset-env": "^7.15.0"
+    "@babel/preset-env": "^7.15.0",
+    "mustache": "^3.1.0"
   }
 }

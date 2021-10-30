@@ -23,7 +23,6 @@ export default function SelectDrum(props) {
     const { loading, error, data } = useQuery(getBooksQuery);      
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-    console.log(data);
     return(
     <FormControl variant="filled" className={classes.formControl}>
       <InputLabel id="demo-simple-select-filled-label">Drum #</InputLabel>
