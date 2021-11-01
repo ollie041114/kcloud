@@ -1,11 +1,16 @@
-import { account1, privateKey1, contractJSON, contractABI, contractAddress, infura } from './ropstenVsSomething';
+import { account1, privateKey1, infura, contractJSON, contractABI, contractAddress} from './ropstenVsSomething';
 var Tx = require('ethereumjs-tx').Transaction
 const Web3 = require('web3');
 
-export const web3 = new Web3(new Web3.providers.HttpProvider(
-    'https://ropsten.infura.io/v3/f54c17f8fd334d78bcb2117202fe7ce0'
-));
+export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
 
+
+
+  // Create a JavaScript representation of the smart contract
+// const contractJSON = require('..\\..\\abi\\KCLOUD.json');
+// const contractABI = contractJSON['abi']
+// const contractAddress = contractJSON['networks']['3']['address'];
+console.log(contractABI);
 export const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 
