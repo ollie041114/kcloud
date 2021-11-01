@@ -4,7 +4,7 @@ import PanToolTwoToneIcon from '@material-ui/icons/PanToolTwoTone';
 import TimelapseTwoToneIcon from '@material-ui/icons/TimelapseTwoTone';
 import FeaturedVideoTwoToneIcon from '@material-ui/icons/FeaturedVideoTwoTone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFileAlt, faArchive, faShuttleVan, faPeopleCarry, faWarehouse} from '@fortawesome/free-solid-svg-icons'
+import { faFileAlt, faArchive, faShuttleVan, faPeopleCarry, faWarehouse } from '@fortawesome/free-solid-svg-icons'
 import { NoSchemaIntrospectionCustomRule } from 'graphql';
 
 export var itemsList = []
@@ -96,7 +96,7 @@ export function getExtendedDrumData(drum, props) {
         {
             text: "Enrolled",
             rawIcon: faFileAlt,
-            icon: <FontAwesomeIcon icon={faFileAlt}/>,
+            icon: <FontAwesomeIcon icon={faFileAlt} />,
             color: ColorArray[0],
             data: {
                 id: drum.sensor.id,
@@ -106,7 +106,7 @@ export function getExtendedDrumData(drum, props) {
         }, {
             text: "Packaged",
             rawIcon: faArchive,
-            icon: <FontAwesomeIcon icon={faArchive}/>,
+            icon: <FontAwesomeIcon icon={faArchive} />,
             color: ColorArray[1],
             data: {
                 classification: packagingData.classification,
@@ -118,7 +118,7 @@ export function getExtendedDrumData(drum, props) {
         }, {
             text: 'In Transit',
             rawIcon: faShuttleVan,
-            icon: <FontAwesomeIcon icon={faShuttleVan}/>,
+            icon: <FontAwesomeIcon icon={faShuttleVan} />,
             color: ColorArray[2],
             data: {
                 carrier: inTransitData.carrier,
@@ -129,7 +129,7 @@ export function getExtendedDrumData(drum, props) {
         }, {
             text: 'Taken Over',
             rawIcon: faPeopleCarry,
-            icon: <FontAwesomeIcon icon={faPeopleCarry}/>,
+            icon: <FontAwesomeIcon icon={faPeopleCarry} />,
             color: ColorArray[3],
             data: {
                 acquisition: takingOverData.acquisition,
@@ -140,7 +140,7 @@ export function getExtendedDrumData(drum, props) {
         }, {
             text: 'In Temporary Storage',
             rawIcon: faWarehouse,
-            icon: <FontAwesomeIcon icon={faWarehouse}/>,
+            icon: <FontAwesomeIcon icon={faWarehouse} />,
             color: ColorArray[4],
             data: {
                 storage_id: temporaryStorageData.storage_id,
@@ -152,22 +152,131 @@ export function getExtendedDrumData(drum, props) {
     var ExtendedStatus = itemsList[ExtendedStatusTracker];
     var sensorData = drum.sensor.sensorData;
 
-    var radio = sensorData.map(item => {
-        return item.radio;
-    })
-    var temp = sensorData.map(item => {
-        return item.temp
-    })
-    var humidity = sensorData.map(item => {
-        return item.humidity
-    })
-    var currentStatus = sensorData.map(item => {
-        return item.currentStatus
-    })
-    var time_recorded = sensorData.map(item=>{
-        return item.time_recorded
-    })
+    // Constructing the radioactivity data 
+    function between(x, min, max) {
+        console.log("X is "+x+", Min is "+min+", Max is "+max, ", Verdict is "+(x >= min && x <= max));
+        return x >= min && x <= max;
+    }
 
+    function determine_status(value, norm, variation) {
+        var status;
+        var description;
+        if (between(value, norm[0], norm[1])) {
+            status = "Normal"
+            description = "Information matches, or stays within normal ranges"
+            return [status, description];
+        }
+        if (between(value, norm[0] - variation, norm[1] + variation)) {
+            status = "Border"
+            description = "Information approaches the boundary of the normal range"
+        }
+        if (!between(value, norm[0] - variation, norm[1] + variation)) {
+            status = "Danger"
+            description = "Information is inconsistent, or is out of normal range"
+        }
+        if (value == 0) {
+            status = "Doubt"
+            description = "Abnormal status - possibly sensor power off"
+        }
+        return [status, description];
+    }
+    function determine_color(status) {
+        var color;
+        switch (status) {
+            case "Normal":
+                color = "#56f000"
+                break
+            case "Border":
+                color = "#ffb302"
+                break
+            case "Danger":
+                color = "#ff3838"
+                break
+            case "Doubt":
+                color = "#9ea7ad"
+                break
+        }
+        return color;
+    }
+    // Radioactiviy
+    var radio = sensorData.map(item => {
+        var norm = [0, 2];
+        var variation = 1;
+        var value = item.radio;
+        var status = determine_status(value, norm, variation)[0]
+        var description = determine_status(value, norm, variation)[1]
+        var color = determine_color(status)
+        return {
+            name: "Radioactivity",
+            value: value,
+            unit: "uSV/h",
+            date: new Date(item.time_recorded*1000),
+            // Value, [upper_normal, lower_normal], border_boundary
+            status: status,
+            description: description,
+            norm: norm,
+            color: color
+        };
+    })
+    // Temperature
+    var temp = sensorData.map(item => {
+        var norm = [38.0, 39.0];
+        var variation = 0.1;
+        var value = item.temp/100;
+        var status = determine_status(value, norm, variation)[0]
+        var description = determine_status(value, norm, variation)[1]
+        var color = determine_color(status)
+        return {
+            name: "Temperature",
+            value: value,
+            unit: "°C",
+            date: new Date(item.time_recorded*1000),
+            // Value, [upper_normal, lower_normal], border_boundary
+            description: description,
+            status: status,
+            norm: norm,
+            color: color
+        };
+    })
+    // Humidity
+    var humidity = sensorData.map(item => {
+        var norm = [35, 45];
+        var variation = 5;
+        var status = determine_status(item.humidity, norm, variation)[0]
+        var description = determine_status(item.humidity, norm, variation)[1]
+        var color = determine_color(status)
+        return {
+            name: "Humidity",
+            value: item.humidity,
+            unit: "%",
+            date: new Date(item.time_recorded*1000),
+            // Value, [upper_normal, lower_normal], border_boundary
+            status: status,
+            description: description,
+            norm: norm,
+            color: color
+        };
+    })
+    // Current Status
+    var currentStatus = sensorData.map(item => {
+        var norm = [22, 32];
+        var variation = 5;
+        var status = determine_status(item.radio, norm, variation)[0]
+        var description = determine_status(item.radio, norm, variation)[1]
+        var color = determine_color(status)
+        return {
+            value: item.currentStatus,
+            date: new Date(item.time_recorded*1000),
+            currentStatus: item.currentStatus,
+            status: status,
+            description: description,
+            norm: norm,
+            color: color
+        };
+    })
+    var time_recorded = sensorData.map(item => {
+        return new Date(item.time_recorded*1000);
+    })
 
     var drumInformation = {
         basicInfo: {
@@ -181,12 +290,12 @@ export function getExtendedDrumData(drum, props) {
         },
         sensorData: {
             sensor_id: drum.sensor.id,
-            radio: radio,
+            radio: radio, // array of radioactivity points, each with status and color
             temp: temp,
             humidity: humidity,
             currentStatus: currentStatus,
             time_recorded: time_recorded
-        }, 
+        },
         fullDrumHistory: itemsList,
         currentStatusInfo: ExtendedStatus, // Actually just an item in itemsList corresponding to current status
         location: {

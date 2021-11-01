@@ -14,7 +14,8 @@ import {
 import Registration from './pages/Registration';
 import DrumHistory from './pages/DrumHistory';
 import GoogleMaps from './pages/GoogleMaps';
-import SensorData from './pages/SensorData'
+import SensorData from './pages/SensorData';
+
 function App() {
   const client = new ApolloClient({
     uri: 'https://api.thegraph.com/subgraphs/name/ollie041114/kcloud',
