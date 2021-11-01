@@ -19,8 +19,6 @@ export class D3 extends Component {
 
     }
     componentDidUpdate(prevProps) {
-        d3.selectAll("svg > *").remove();
-        this.state = true;
         this.sortedRht = this.props.rhtData.sort(function (x, y) {
             return d3.ascending(x.date, y.date);
         });
@@ -32,13 +30,12 @@ export class D3 extends Component {
         // function(d){
         //     return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
         //   }
-        d3.selectAll("svg > *").remove();
-        
         var margin = { top: 10, right: 30, bottom: 30, left: 60 },
             width = 460 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
 
-        // append the svg object to the body of the page
+
+            // append the svg object to the body of the page
         var svg = d3.select(this.refs.canvas)
             .append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -224,7 +221,6 @@ export class D3 extends Component {
                 .attr("cy", function (d) { return y(d.value) })
         });
     }
-
     render() { return <div ref="canvas"></div> }
 }
 

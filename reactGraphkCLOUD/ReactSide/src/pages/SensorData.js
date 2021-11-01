@@ -129,7 +129,7 @@ function Body(props) {
           <TabPanel value={value} index={mapping[0].value}>
             {(sensorData != null) ?
               (
-                <D3 extendedDrum={extendedDrum} rhtData={extendedDrum.sensorData.temp} id = "lol"/>
+                <D3 extendedDrum={extendedDrum} rhtData={extendedDrum.sensorData.temp} key = {extendedDrum.basicInfo.id}/>
               ) : (
                 <h1>Loading!</h1>
               )
@@ -138,7 +138,7 @@ function Body(props) {
           <TabPanel value={value} index={mapping[1].value}>
             {(sensorData != null) ?
               (
-                <D3 extendedDrum={extendedDrum} rhtData={extendedDrum.sensorData.radio} id = "lol2" />
+                <D3 extendedDrum={extendedDrum} rhtData={extendedDrum.sensorData.radio} key = {extendedDrum.basicInfo.id} />
               ) : (
                 <h1>Loading!</h1>
               )
@@ -147,7 +147,7 @@ function Body(props) {
           <TabPanel value={value} index={mapping[2].value}>
             {(sensorData != null) ?
               (
-                <D3 extendedDrum={extendedDrum} rhtData={extendedDrum.sensorData.humidity} id = "lol3" />
+                <D3 extendedDrum={extendedDrum} rhtData={extendedDrum.sensorData.humidity} key = {extendedDrum.basicInfo.id} />
 
               ) : (
                 <h1>Loading!</h1>
