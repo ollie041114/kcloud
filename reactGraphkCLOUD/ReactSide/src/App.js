@@ -18,7 +18,8 @@ import SensorData from './pages/SensorData';
 
 function App() {
   const client = new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/ollie041114/kcloud',
+    //uri: 'https://api.thegraph.com/subgraphs/name/ollie041114/kcloud',
+    uri: 'http://localhost:8000/subgraphs/name/ollie041114/Kcloud',
     cache: new InMemoryCache()
   })
 

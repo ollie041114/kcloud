@@ -1,10 +1,22 @@
 import { account1, privateKey1, infura, contractJSON, contractABI, contractAddress} from './ropstenVsSomething';
-var Tx = require('ethereumjs-tx').Transaction
+import Common from 'ethereumjs-common'
+
+//const Tx = require('ethereumjs-tx').Transaction
+const Tx = require('ethereumjs-tx')
 const Web3 = require('web3');
 
-export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
+//export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
+export const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
-
+const customCommon = Common.forCustomChain(
+    'mainnet',
+    {
+      name: '127.0.0.1',
+      networkId: 1635767099240,
+      chainId: 1337,
+    },
+    'petersburg',
+  );
 
   // Create a JavaScript representation of the smart contract
 // const contractJSON = require('..\\..\\abi\\KCLOUD.json');
@@ -13,6 +25,11 @@ export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
 console.log(contractABI);
 export const contract = new web3.eth.Contract(contractABI, contractAddress);
 
+web3.eth.getBlock("latest", false, (error, result) => {
+    console.log("hass gasssss: ", result.gasLimit);
+    // => 8000029
+  });
+
 
 export async function signedTransaction(func, globalCallback){
     async function myFunction(callback){
@@ -20,13 +37,16 @@ export async function signedTransaction(func, globalCallback){
         web3.eth.getTransactionCount(account1, (err, txCount) => {
             const txObject = {
                 nonce:    web3.utils.toHex(txCount),
-                gasLimit: web3.utils.toHex(8000000), // Raise the gas limit to a much higher amount
-                gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei')),
+                gasLimit: web3.utils.toHex(6721975), // Raise the gas limit to a much higher amount
+                gasPrice: web3.utils.toHex(web3.utils.toWei('1', 'gwei')),
                 //from: account1,
                 to: contractAddress,
                 data: func
             }
-            var tx = new Tx(txObject, {chain: 'ropsten'});
+            
+            console.log("this is the mother fucking Tx: ", Tx);
+            //var tx = new Tx(txObject, {chain: 'ropsten'});
+            var tx = new Tx(txObject,  { common: customCommon });
             tx.sign(privateKey1);
             var stx = tx.serialize();
             
