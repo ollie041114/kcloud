@@ -1,21 +1,31 @@
 import { account1, privateKey1, infura, contractJSON, contractABI, contractAddress} from './ropstenVsSomething';
 import Common from 'ethereumjs-common'
 
-//const Tx = require('ethereumjs-tx').Transaction
-const Tx = require('ethereumjs-tx')
+const Tx = require('ethereumjs-tx').Transaction
+//const Tx = require('ethereumjs-tx')
 const Web3 = require('web3');
 
 //export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
 export const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
+//For outside-lab testing
+// const customCommon = Common.forCustomChain(
+//     'mainnet',
+//     {
+//       name: '127.0.0.1',
+//       networkId: 1635767099240,
+//       chainId: 1337,
+//     },
+//     'petersburg',
+//   );
 const customCommon = Common.forCustomChain(
     'mainnet',
     {
       name: '127.0.0.1',
-      networkId: 1635767099240,
-      chainId: 1337,
+      networkId: 1500,
+      chainId: 1500,
     },
-    'petersburg',
+    'istanbul',
   );
 
   // Create a JavaScript representation of the smart contract
@@ -32,13 +42,16 @@ web3.eth.getBlock("latest", false, (error, result) => {
 
 
 export async function signedTransaction(func, globalCallback){
+    // var balance = await web3.eth.getBalance(account1); //Will give value in.
+    // balance = web3.utils.toDecimal(balance);
+    // console.log("Balance is ", balance);
     async function myFunction(callback){
 
         web3.eth.getTransactionCount(account1, (err, txCount) => {
             const txObject = {
                 nonce:    web3.utils.toHex(txCount),
-                gasLimit: web3.utils.toHex(6721975), // Raise the gas limit to a much higher amount
-                gasPrice: web3.utils.toHex(web3.utils.toWei('1', 'gwei')),
+                gasLimit: web3.utils.toHex("7999999"), // Raise the gas limit to a much higher amount
+                gasPrice: web3.utils.toHex(web3.utils.toWei('100', 'wei')),
                 //from: account1,
                 to: contractAddress,
                 data: func
