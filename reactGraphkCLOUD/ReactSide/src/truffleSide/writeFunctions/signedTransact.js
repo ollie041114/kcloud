@@ -6,7 +6,7 @@ const Tx = require('ethereumjs-tx').Transaction
 const Web3 = require('web3');
 
 //export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
-export const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+export const web3 = new Web3(new Web3.providers.HttpProvider('http://192.168.0.11:8546'));
 
 //For outside-lab testing
 // const customCommon = Common.forCustomChain(
@@ -35,10 +35,10 @@ const customCommon = Common.forCustomChain(
 console.log(contractABI);
 export const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-web3.eth.getBlock("latest", false, (error, result) => {
-    console.log("hass gasssss: ", result.gasLimit);
-    // => 8000029
-  });
+// web3.eth.getBlock("latest", false, (error, result) => {
+//     console.log("hass gasssss: ", result.gasLimit);
+//     // => 8000029
+//   });
 
 
 export async function signedTransaction(func, globalCallback){
@@ -57,7 +57,7 @@ export async function signedTransaction(func, globalCallback){
                 data: func
             }
             
-            console.log("this is the mother fucking Tx: ", Tx);
+            console.log("this is the Tx: ", Tx);
             //var tx = new Tx(txObject, {chain: 'ropsten'});
             var tx = new Tx(txObject,  { common: customCommon });
             tx.sign(privateKey1);

@@ -6,6 +6,13 @@ import classNames from "classnames";
 const drawerWidth = 240;
 const appBarHeight = 80;
 export const useStyles = makeStyles((theme) => ({
+  putRegistrationToCenter: {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    marginTop: '-100px',
+    marginLeft: '-200px',
+  },
   pach: {
     display: 'flex',
     flexGrow: 0,
