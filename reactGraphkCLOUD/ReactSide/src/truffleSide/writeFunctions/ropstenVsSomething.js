@@ -14,8 +14,14 @@ function getAddress() {
   if (data == "Node 1"){
     address = "0xe9b84bd0e6186fe15b799b1c9504950be9b757f0";
   }
-  if (data == "Node 2"){
+  else if (data == "Node 2"){
     address = "0x1eca039c92ee3071bd71c1d300395c5090d945e3";
+  }
+  else if (data == "Node 3"){
+    address = "0x6dafb09af6c6e2c10357ccbefdb71bd4ae8e5f52";
+  }
+  else if (data == "Node 4"){
+    address = "0xc21a53a858759296445df1af04e4338a042a7931";
   }
   return address;
 } 
@@ -25,9 +31,12 @@ function getPrivateKey() {
   var privateKey = "";
   if (data == "Node 1"){
     privateKey = "fcf36e0625ea8cfdd7e771bea899f0816c4cf98a04d70df7f16d51a1cdc15f18";
-  }
-  if (data == "Node 2"){
+  } else if (data == "Node 2"){
     privateKey = "4b4fd9826c1bb97ccf7483261d3b772f3dacba30372e33a6c05f72a63ba940e0";
+  } else if (data == "Node 3"){
+    privateKey = "8a958d37d99c5a1efed93f8b57dc33d838c5c3cb5d0eb19f20f276468eeea412";
+  } else if (data == "Node 4"){
+    privateKey = "22e2a5cabf8826f9f75090a71db77120f4b8370f846c6abd3b9085cd19bc438d";
   }
   return privateKey;
 }

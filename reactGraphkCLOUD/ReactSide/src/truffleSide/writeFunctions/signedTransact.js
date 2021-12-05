@@ -6,7 +6,7 @@ const Tx = require('ethereumjs-tx').Transaction
 const Web3 = require('web3');
 
 //export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
-export const web3 = new Web3(new Web3.providers.HttpProvider('http://192.168.0.11:8546'));
+export const web3 = new Web3(new Web3.providers.HttpProvider('http://192.168.0.10:8545'));
 
 //For outside-lab testing
 // const customCommon = Common.forCustomChain(
@@ -51,7 +51,7 @@ export async function signedTransaction(func, globalCallback){
             const txObject = {
                 nonce:    web3.utils.toHex(txCount),
                 gasLimit: web3.utils.toHex("7999999"), // Raise the gas limit to a much higher amount
-                gasPrice: web3.utils.toHex(web3.utils.toWei('100', 'wei')),
+                gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'wei')),
                 //from: account1,
                 to: contractAddress,
                 data: func

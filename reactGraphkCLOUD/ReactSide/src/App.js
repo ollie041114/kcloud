@@ -45,6 +45,12 @@ function App() {
     if (node=="Node 3" && password=="Node 3"){
       setSignin(true);
     }
+    if (node=="Node 4" && password=="Node 4"){
+      setSignin(true);
+    }
+    if (node=="Node 5" && password=="Node 5"){
+      setSignin(true);
+    }
     localStorage.setItem('state', JSON.stringify(node));
     // console.log(myStr);
   };
@@ -88,6 +94,8 @@ function App() {
           <MenuItem value={"Node 1"}>Node 1</MenuItem>
           <MenuItem value={"Node 2"}>Node 2</MenuItem>
           <MenuItem value={"Node 3"}>Node 3</MenuItem>
+          <MenuItem value={"Node 4"}>Node 4</MenuItem>
+          <MenuItem value={"Node 5"}>Node 5</MenuItem>
         </Select>
       </FormControl>
       <TextField id="standard-basic" label="Password" variant="standard" onChange={(data) => setPassword(data.target.value)}/>
