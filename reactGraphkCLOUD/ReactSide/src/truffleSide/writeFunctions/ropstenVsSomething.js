@@ -23,6 +23,9 @@ function getAddress() {
   else if (data == "Node 4"){
     address = "0xc21a53a858759296445df1af04e4338a042a7931";
   }
+  else if (data == "Node 5"){
+    address = "0x3ce23649df5c8317e4e51efb511eb1c6f4b312ec";
+  }
   return address;
 } 
 
@@ -37,6 +40,8 @@ function getPrivateKey() {
     privateKey = "8a958d37d99c5a1efed93f8b57dc33d838c5c3cb5d0eb19f20f276468eeea412";
   } else if (data == "Node 4"){
     privateKey = "22e2a5cabf8826f9f75090a71db77120f4b8370f846c6abd3b9085cd19bc438d";
+  } else if (data == "Node 5"){
+    privateKey = "39581bc5e366373dd2738ae21f5a168ff0d1b628e1d7f10aabe202b7f7b03d3e";
   }
   return privateKey;
 }
