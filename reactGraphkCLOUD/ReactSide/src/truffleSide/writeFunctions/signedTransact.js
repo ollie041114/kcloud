@@ -1,35 +1,65 @@
-var Tx = require('ethereumjs-tx').Transaction
+import { account1, privateKey1, infura, contractJSON, contractABI, contractAddress} from './ropstenVsSomething';
+import Common from 'ethereumjs-common'
+
+const Tx = require('ethereumjs-tx').Transaction
+//const Tx = require('ethereumjs-tx')
 const Web3 = require('web3');
 
-export const web3 = new Web3(new Web3.providers.HttpProvider(
-    'https://ropsten.infura.io/v3/f54c17f8fd334d78bcb2117202fe7ce0'
-));
+//export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
+export const web3 = new Web3(new Web3.providers.HttpProvider('http://192.168.0.10:8545'));
 
-const account1 = '0x070aE2b66a63De8b4Cd352e725CA81Ed663611F0' // Your account address 1
-const privateKey1 = Buffer.from('7ae4495b934af72e8ce1d5792f98c119f1d831690ee27dcfeee4c077d7f4f7b3', 'hex')
-
+//For outside-lab testing
+// const customCommon = Common.forCustomChain(
+//     'mainnet',
+//     {
+//       name: '127.0.0.1',
+//       networkId: 1635767099240,
+//       chainId: 1337,
+//     },
+//     'petersburg',
+//   );
+const customCommon = Common.forCustomChain(
+    'mainnet',
+    {
+      name: '127.0.0.1',
+      networkId: 1500,
+      chainId: 1500,
+    },
+    'istanbul',
+  );
 
   // Create a JavaScript representation of the smart contract
-const contractJSON = require('..\\..\\abi\\KCLOUD.json');
-const contractABI = contractJSON['abi']
-const contractAddress = contractJSON['networks']['3']['address'];
-
+// const contractJSON = require('..\\..\\abi\\KCLOUD.json');
+// const contractABI = contractJSON['abi']
+// const contractAddress = contractJSON['networks']['3']['address'];
+console.log(contractABI);
 export const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+// web3.eth.getBlock("latest", false, (error, result) => {
+//     console.log("hass gasssss: ", result.gasLimit);
+//     // => 8000029
+//   });
 
 
 export async function signedTransaction(func, globalCallback){
+    // var balance = await web3.eth.getBalance(account1); //Will give value in.
+    // balance = web3.utils.toDecimal(balance);
+    // console.log("Balance is ", balance);
     async function myFunction(callback){
 
         web3.eth.getTransactionCount(account1, (err, txCount) => {
             const txObject = {
                 nonce:    web3.utils.toHex(txCount),
-                gasLimit: web3.utils.toHex(8000000), // Raise the gas limit to a much higher amount
-                gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei')),
+                gasLimit: web3.utils.toHex("7999999"), // Raise the gas limit to a much higher amount
+                gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'wei')),
                 //from: account1,
                 to: contractAddress,
                 data: func
             }
-            var tx = new Tx(txObject, {chain: 'ropsten'});
+            
+            console.log("this is the Tx: ", Tx);
+            //var tx = new Tx(txObject, {chain: 'ropsten'});
+            var tx = new Tx(txObject,  { common: customCommon });
             tx.sign(privateKey1);
             var stx = tx.serialize();
             

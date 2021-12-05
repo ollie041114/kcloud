@@ -74,7 +74,7 @@ export class D3 extends Component {
             .on("end", updateChart)               // Each time the brush selection changes, trigger the 'updateChart' function
             
         // Add the highlight lines for normal range    
-        var top = y((data[1].norm[1]));
+        let top = y((data[1].norm[1]));
             console.log((data[1].norm[1]))
             var bottom = Math.max(d3.min(data, function (d) { return +d.value; }), (data[1].norm[0])); //one more day
             bottom = y(bottom);
