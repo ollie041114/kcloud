@@ -38,7 +38,7 @@ class EthereumHandler:
  
         self.private_key_bytes = Web3.toBytes(hexstr=self.private_key_string)
         self.account = self.w3.eth.account.privateKeyToAccount(self.private_key_bytes)
-        
+
     def passSensorData(self, _sensorId, _time, _latitude, _longitude, _accX, _accY, _accZ, _temp, _humi, _radio, _end):
         dataId = int(uuid.uuid1().int>>64)
         sensorId = int(_sensorId)
@@ -55,12 +55,12 @@ class EthereumHandler:
         self.KCLOUD_txn = self.KCLOUD.functions.passSensorData(\
             dataId, sensorId, time, latitude, longitude, accX, \
             accY, accZ, temp, humi, radio)\
-        .buildTransaction({'chainId': 3, 'gas': 8000000, 'gasPrice': self.w3.toWei('20', 'gwei'), 'nonce': self.w3.eth.getTransactionCount(self.account._address)})
+        .buildTransaction({'chainId': 3, 'nonce': self.w3.eth.getTransactionCount(self.account._address)})
        # self.KCLOUD_txn = self.KCLOUD.functions.passSensorData(_sensorId, _time, [_latitude, _longitude, _accX, _accY, _accZ, _temp, _humi, _radio]).buildTransaction({'chainId': 3, 'gas': 8000000, 'gasPrice': self.w3.toWei('20', 'gwei'), 'nonce': self.w3.eth.getTransactionCount(self.account._address), 'value': 0})
 
 
         signed_txn = self.w3.eth.account.sign_transaction(self.KCLOUD_txn, private_key = self.private_key_bytes)
 
         self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
-
+        print("DataID: ",dataId, "SensorID:", sensorId);
         print(self.KCLOUD_txn)
