@@ -81,7 +81,7 @@ export function getExtendedDrumData(drum, props) {
 
     }
     var ExtendedStatusTracker
-    var StatusArray = ["Enrolled", "Packaged", "In Transit", "Taken Over", "'In Temporary Storage'"];
+    var StatusArray = ["Enrolled", "Packaged", "In Transit", "Taken Over", "In Temporary Storage"];
     var ColorArray = ["grey", "grey", "grey", "grey", "grey"];
     for (var i = 0; i < StatusArray.length; i++) {
         if (StatusArray[i] != drum.currentStatus) {
@@ -277,7 +277,7 @@ export function getExtendedDrumData(drum, props) {
     var time_recorded = sensorData.map(item => {
         return new Date(item.time_recorded*1000);
     })
-
+    console.log(drum.id);
     var drumInformation = {
         basicInfo: {
             id: drum.id,

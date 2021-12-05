@@ -77,7 +77,13 @@ const Drawer = (props) => {
         text: 'Monitor Sensors',
         icon: <ArchiveIcon />,
         onClick: () => history.push('/SensorData')
-    }];
+    },
+    {
+      text: 'Monitor Paths',
+      icon: <ArchiveIcon />,
+      onClick: () => history.push('/PathMonitor')
+  }
+  ];
 
     return (
 <div className>

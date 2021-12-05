@@ -3,7 +3,7 @@ pragma solidity ^0.8.6;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract KCLOUD {
-    // events 
+    
     event NewDrumEnrolled(uint drum_id, uint time, uint sensor_id);
     event DrumPackaged(uint drum_id, uint time, string classification, string w_type, uint date_unix, string place_of_occurence, uint dose_rate, string waste_acceptance_request);
     event DrumInTransit(uint drum_id, uint time, string carrier, string transportation_schedule);

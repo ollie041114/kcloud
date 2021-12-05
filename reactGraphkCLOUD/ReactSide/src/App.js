@@ -15,13 +15,14 @@ import Registration from './pages/Registration';
 import DrumHistory from './pages/DrumHistory';
 import GoogleMaps from './pages/GoogleMaps';
 import SensorData from './pages/SensorData';
+import Paths from './pages/Paths';
+import { getBooksQuery } from "./queries/queries";
 
 function App() {
   const client = new ApolloClient({
     uri: 'https://api.thegraph.com/subgraphs/name/ollie041114/kcloud',
     cache: new InMemoryCache()
   })
-
     return (
       <ApolloProvider client={client}>
         <Router>
@@ -31,6 +32,7 @@ function App() {
           <Route exact path= "/Explorer/DrumHistory" render ={props => <DrumHistory{...props} />  }/>
           <Route exact path= "/GoogleMaps" render ={props => <GoogleMaps{...props} />  }/>
           <Route exact path= "/SensorData" render ={props => <SensorData{...props} />  }/>
+          <Route exact path= "/PathMonitor" render ={props => <Paths{...props} />  }/>
         </Switch>
         </Router>
       </ApolloProvider>

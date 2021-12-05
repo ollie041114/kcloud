@@ -77,6 +77,9 @@ export const useStyles = makeStyles((theme) => ({
     gridColumn: "3 /3",
     gridRow: "1/3"
   },
+  errorMessage: {
+    color:"#00adb5"
+  },
   MinidrumHistoryWrapper: {
     display: "grid",
     gridTemplateColumns: `1fr`,
@@ -133,6 +136,22 @@ export const useStyles = makeStyles((theme) => ({
   },
   maps: {
     width: `calc(100% - ${drawerWidth}px)`
+  },
+  MapBoxMapContainer: {
+    
+    height: "400px",
+  },
+  MapBoxSideBar: {
+    backgroundColor: "rgba(35, 55, 75, 0.9)", 
+    color: "#fff",
+    padding: "6px 12px",
+    fontFamily: "monospace",
+    zIndex: "1",
+    position: "absolute",
+    top: "0",
+    left: "0",
+    margin: "12px",
+    borderRadius: "4px",   
   },
   mapWrapper: {
     display: "grid",

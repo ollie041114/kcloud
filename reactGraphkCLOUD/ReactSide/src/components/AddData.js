@@ -2,18 +2,18 @@ import React, {Component} from 'react';
 
 import '../App.css';
 // components
-import Packaging from '../components/packaging';
-import Transit from '../components/transit';
-import TemporaryStorage from '../components/temporaryStorage';
-import TakingOver from '../components/takingOver';
-import Sidebar from '../components/Sidebar';
-import Drawer from "../components/Drawer";
+import Packaging from './packaging';
+import Transit from './transit';
+import TemporaryStorage from './temporaryStorage';
+import TakingOver from './takingOver';
+import Sidebar from './Sidebar';
+import Drawer from "./Drawer";
 import { useStyles } from '../styling';
 import AppBar from '@material-ui/core/AppBar';
 import { useTheme } from '@material-ui/core';
 // import Sidebar from './components/Sidebar';
 import { useHistory } from "react-router";
-import SelectDrum from '../components/selectDrum';
+import SelectDrum from './selectDrum';
 import { useState, useEffect } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -26,7 +26,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 
 
-var StatusArray = ["Enrolled", "Packaged", "In Transit", "Taken Over", "'In Temporary Storage'"]
+var StatusArray = ["Enrolled", "Packaged", "In Transit", "Taken Over", "In Temporary Storage"]
 var NameArray = ["Packaging", "Transit", "Taking Over", "Temporary Storage"]
 function getSteps() {
   return NameArray;
@@ -145,12 +145,12 @@ function AddData() {
       <div>
         {activeStep === steps.length ? (
           <div>
-            <Typography className={classes.instructions}>
+            <Typography variant="h4" gutterBottom component="div">
               All steps completed - you&apos;re finished
             </Typography>
-            <Button onClick={handleReset} className={classes.button}>
+            {/* <Button onClick={handleReset} className={classes.button}>
               Reset
-            </Button>
+            </Button> */}
           </div>
         ) : (
           <div>
@@ -158,9 +158,9 @@ function AddData() {
               {<GetStepContent step = {activeStep} drum = {drum} handleNext = {handleNext}/>}
               </Typography>
             <div>
-              <Button disabled={activeStep === initialStep} onClick={handleBack} className={classes.button}>
+              {/* <Button disabled={activeStep === initialStep} onClick={handleBack} className={classes.button}>
                 Back
-              </Button>
+              </Button> */}
               {/* {isStepOptional(activeStep) && (
                 <Button
                   variant="contained"
@@ -172,14 +172,14 @@ function AddData() {
                 </Button>
               )} */}
 
-              <Button
+              {/* <Button
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
               >
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
+              </Button> */}
             </div>
           </div>
         )}
