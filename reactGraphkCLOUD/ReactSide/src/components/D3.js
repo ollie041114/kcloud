@@ -127,8 +127,8 @@ export class D3 extends Component {
             Tooltip
                 .html(" <b>" + d.name + "</b>: " + d.value + " " + d.unit + "<br> <b>Current Status</b>: " + d.status +
                     "<br>  <small> " + d.description + "</small>")
-                .style("left", (d3.mouse(this)[0] + 70) + "px")
-                .style("top", (d3.mouse(this)[1]) + "px")
+                .style("left", (d3.pointer(this)[0] + 70) + "px")
+                .style("top", (d3.pointer(this)[1]) + "px")
 
         }
         var mouseleave = function (d) {
@@ -171,10 +171,10 @@ export class D3 extends Component {
         function idled() { idleTimeout = null; }
 
         // A function that update the chart for given boundaries
-        function updateChart() {
+        function updateChart(event) {
 
             // What are the selected boundaries?
-            var extent = d3.event.selection
+            var extent = event.selection
 
             // If no selection, back to initial coordinate. Otherwise, update X axis domain
             if (!extent) {
