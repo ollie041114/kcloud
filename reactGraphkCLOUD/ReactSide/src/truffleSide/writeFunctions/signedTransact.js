@@ -6,7 +6,7 @@ const Tx = require('ethereumjs-tx').Transaction
 const Web3 = require('web3');
 
 //export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
-export const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+export const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8549'));
 
 //For outside-lab testing
 // const customCommon = Common.forCustomChain(
