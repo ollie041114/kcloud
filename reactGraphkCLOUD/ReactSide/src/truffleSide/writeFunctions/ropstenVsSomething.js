@@ -80,9 +80,9 @@ var localDung = {
 var localDungOlzhasvar = {
   account1: getAddress(), //"0xe9b84bd0e6186fe15b799b1c9504950be9b757f0", 
   privateKey1: Buffer.from(getPrivateKey(), 'hex'),
-  contractJSON: require('../../abi/labKCLOUD.json'),
-  contractABI: require('../../abi/labKCLOUD.json')['abi'],
-  contractAddress: require('../../abi/labKCLOUD.json')['networks']['1500']['address'],
+  contractJSON: require('../../abi/BESTnewestKCLOUD.json'),
+  contractABI: require('../../abi/BESTnewestKCLOUD.json')['abi'],
+  contractAddress: require('../../abi/BESTnewestKCLOUD.json')['networks']['1500']['address'],
 };
 
 var network = localDungOlzhasvar;

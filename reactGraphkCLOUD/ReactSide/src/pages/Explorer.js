@@ -6,8 +6,8 @@ import { useStyles } from '../styling';
 import Drawer from '../components/Drawer';
 import { useHistory } from 'react-router';
 import { DrumCard } from '../components/_DrumCards';
-
-
+import { ExploreAggregator } from '../components/exploreAggregator';
+import Box from '@mui/material/Box';
 
 
 export const withRouter = (Component) => {
@@ -34,25 +34,62 @@ function Oncl(event, history, drum){
       });
 }
 
-function ExchangeRates() {
-        const { loading, error, data } = useQuery(getBooksQuery);      
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error :(</p>;
+function ExchangeRates(data) {
         return data.drums.map(drum => {
             return(
                 <DrumCard drum = {drum} onClick = {Oncl}></DrumCard>
             )
+        }); 
+}
+
+function Aggregator(data) {
+    var population = [];
+    var statusArray = [];
+    data.drums.map(drum => {
+        var found = false;
+        var foundIndex = "Nothing";
+        let obj = statusArray.find((o, i) => {
+            if (o.drumStatus === drum.currentStatus) {
+                found = true;
+                foundIndex = i;
+                return true; // stop searching
+            } 
         });
+        if (found == true){
+            statusArray[foundIndex].number += 1;
+        } else {
+            var appendix = {
+                drumStatus: drum.currentStatus,
+                number: 1,
+            };
+            statusArray.push(appendix);
+        }
+    });
+    for (var i = 0; i < statusArray.length; i++) {
+        population.push({
+            name: statusArray[i].drumStatus,
+            value: statusArray[i].number,}
+        );
+        //Do something
+    }
+    return population;
 }
 
 function Explorer(){
     const classes = useStyles(); 
-        return (
+    const { loading, error, data } = useQuery(getBooksQuery);      
+        if (loading) return <p>Loading...</p>;
+        if (error) return <p>Error :(</p>;
+    var population = Aggregator(data);
+    return (
             <div className={classes.root}>
                 <Drawer></Drawer>
             <div className={classes.content}>
             <div className={classes.toolbar} />
-                {ExchangeRates()}
+                <Box sx={{ p: 3 }}> 
+                <ExploreAggregator population = {population}/>
+                </Box>
+                {ExchangeRates(data)}
             </div>
             </div>
         );

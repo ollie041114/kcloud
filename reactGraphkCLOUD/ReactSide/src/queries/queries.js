@@ -19,7 +19,8 @@ const getBooksQuery = gql`
         id
         sensor{
             id
-            sensorData{
+        }
+        sensorData{
                 currentStatus 
                 time_recorded
                 GPS_longitude
@@ -31,7 +32,6 @@ const getBooksQuery = gql`
                 radio
                 alarm
             }
-        }
         currentStatus
         date_unix
         classification

@@ -5,9 +5,9 @@ class EthereumHandler {
 
     async _enrollment(drum_id, time, sensor_id, globalCallback) {
         const func = contract.methods.enrollment(
-            web3.utils.toBN(drum_id),
+            drum_id.toString(),
             web3.utils.toBN(time),
-            web3.utils.toBN(sensor_id)
+            sensor_id.toString()
         )
         .encodeABI();
         signedTransaction(func, globalCallback);
@@ -40,12 +40,18 @@ class EthereumHandler {
     }
 
     _temporaryStorage(drum_id, time, longitude, latitude, storage_id, storage_schedule, globalCallback) {
+        // console.log(drum_id, time, longitude, latitude, storage_id, storage_schedule);
+        const drum_idBN = (web3.utils.toBN(drum_id));
+        const time_idBN = web3.utils.toBN(time);
+        const longitudeBN = (web3.utils.toBN(longitude));
+        const latitudeBN = (web3.utils.toBN(latitude));
+        const storage_idBN = (web3.utils.toBN(storage_id));
         const func = contract.methods.temporaryStorage(
-            web3.utils.toBN(drum_id), 
-            web3.utils.toBN(time), 
-            web3.utils.toBN(longitude), 
-            web3.utils.toBN(latitude), 
-            web3.utiils.toBN(storage_id), 
+            drum_idBN, 
+            time_idBN,
+            longitudeBN, 
+            latitudeBN,
+            storage_idBN, 
             storage_schedule.toString()
             )
             .encodeABI();
@@ -53,6 +59,7 @@ class EthereumHandler {
     }
 
     _takingOver(drum_id, time, acquisition, transferee, transportation_schedule, fileUrl, globalCallback) {
+
         const func = contract.methods.takingOver(
             web3.utils.toBN(drum_id), 
             web3.utils.toBN(time), 

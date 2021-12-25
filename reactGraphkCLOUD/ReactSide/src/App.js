@@ -17,6 +17,8 @@ import GoogleMaps from './pages/GoogleMaps';
 import SensorData from './pages/SensorData';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
+import Paths from './components/Paths';
+import { getBooksQuery } from "./queries/queries";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -77,7 +79,8 @@ function App() {
           <Route exact path= "/Explorer/DrumHistory" render ={props => <DrumHistory{...props} />  }/>
           <Route exact path= "/GoogleMaps" render ={props => <GoogleMaps{...props} />  }/>
           <Route exact path= "/SensorData" render ={props => <SensorData{...props} />  }/>
-        </Switch>
+          <Route exact path= "/PathMonitor" render ={props => <Paths{...props} /> }/>
+          </Switch>
         </Router>) : 
 
 
