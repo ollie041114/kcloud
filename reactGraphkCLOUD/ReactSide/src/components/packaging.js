@@ -14,6 +14,10 @@ import { Typography } from '@material-ui/core';
 import { Box } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { useStyles } from '../styling';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 import {
   MuiPickersUtilsProvider,
@@ -31,7 +35,7 @@ function Packaging(props) {
   };
 
   function submitForm(e, { drum_id, classification, w_type,
-    place_of_occurence, date_of_occurence, dose_rate, selectedDate, fileUrl }) {
+    place_of_occurence, date_of_occurence, dose_rate, pollution_level, selectedDate, fileUrl }) {
     //console.log(drum_id.drum_id, sensor_id.sensor_id, time);
     e.preventDefault();
     //console.log(e);
@@ -44,7 +48,7 @@ function Packaging(props) {
     var checkResult = checkConform("packaging", params);
     if (checkResult == "Ok") {
       setTransactionHash("It was changed!");
-      ethereumHandler._packaging(drum_id, time, classification, w_type, date_of_occurence_in_unix, place_of_occurence, dose_rate, fileUrl, callbackReceipt);
+      ethereumHandler._packaging(drum_id, time, classification, w_type, date_of_occurence_in_unix, place_of_occurence, dose_rate, pollution_level, fileUrl, callbackReceipt);
       return transactionHash;
     }
     else {
@@ -61,6 +65,7 @@ function Packaging(props) {
   const [place_of_occurence, setPlace] = useState();
   const [date_of_occurence, setDate] = useState(new Date());
   const [dose_rate, setDoseRate] = useState();
+  const [pollution_level, setPollutionLevel] = useState();
   const [selectedDate, setSelectedDate] = useState(null);
   const [fileUrl, setFileUrl] = useState();
   const [transactionHash, setTransactionHash] = useState(null);
@@ -81,7 +86,7 @@ function Packaging(props) {
   function CallbackForButton(e) {
     (submitForm(e, {
       drum_id, classification, w_type,
-      place_of_occurence, date_of_occurence, dose_rate, selectedDate, fileUrl
+      place_of_occurence, date_of_occurence, dose_rate, pollution_level, selectedDate, fileUrl
     }))
   }
   useEffect(() => {
@@ -102,26 +107,41 @@ function Packaging(props) {
               Packaging: {drum_id}
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    id="firstName"
-                    name="firstName"
-                    label="Classification"
-                    fullWidth
-                    autoComplete="given-name"
-                    onChange={(data) => setClassification(data.target.value)}
-                  />
+                  <FormControl variant="standard" sx={{ m: 0, minWidth: 200 }}>
+                    <InputLabel id="demo-simple-select-standard-label">Classification</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-standard-label"
+                      id="demo-simple-select-standard"
+                      value={classification}
+                      onChange={(data) => setClassification(data.target.value)}
+                      label="Classification"
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={"General Dry Active Waste"}>General Dry Active Waste</MenuItem>
+                      <MenuItem value={"Shielded Dry Active Waste"}>Shielded Dry Active Waste</MenuItem>
+                      <MenuItem value={"Concentrate Waste"}>Concentrate Waste</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    id="lastName"
-                    name="lastName"
-                    label="Type"
-                    fullWidth
-                    autoComplete="family-name"
-                    onChange={(data) => setWType(data.target.value)}
-                  />
+                <FormControl variant="standard" sx={{ m: 0, minWidth: 200 }}>
+                    <InputLabel id="demo-simple-select-standard-label">Sub-classification (Type)</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-standard-label"
+                      id="demo-simple-select-standard"
+                      value={classification}
+                      onChange={(data) => setWType(data.target.value)}
+                      label="Classification"
+                    >
+                      <MenuItem value={w_type}>
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={"Combustible"}>Combustible</MenuItem>
+                      <MenuItem value={"Non-combustible"}>Non-combustible</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -139,13 +159,23 @@ function Packaging(props) {
                     required
                     id="city"
                     name="city"
-                    label="Surface radiation dose rate"
+                    label="Radioactive Concentration (Bq/g)"
                     fullWidth
                     autoComplete="shipping address-level2"
                     onChange={(data) => setDoseRate(data.target.value)}
                   />
                 </Grid>
-
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    id="city"
+                    name="city"
+                    label="Pollution level (CPM)"
+                    fullWidth
+                    autoComplete="shipping address-level2"
+                    onChange={(data) => setPollutionLevel(data.target.value)}
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Grid container>

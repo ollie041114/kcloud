@@ -13,7 +13,7 @@ class EthereumHandler {
         signedTransaction(func, globalCallback);
     }
 
-    _packaging(drum_id, time, classification, w_type, date_unix, place_of_occurence, dose_rate, fileUrl, globalCallback) {
+    _packaging(drum_id, time, classification, w_type, date_unix, place_of_occurence, dose_rate, pollution_level, fileUrl, globalCallback) {
         const func = contract.methods.packaging(
             web3.utils.toBN(drum_id), 
             web3.utils.toBN(time), 
@@ -22,6 +22,7 @@ class EthereumHandler {
             web3.utils.toBN(date_unix), 
             place_of_occurence.toString(), 
             web3.utils.toBN(dose_rate),
+            web3.utils.toBN(pollution_level),
             fileUrl.toString()
             )
             .encodeABI();
@@ -57,7 +58,16 @@ class EthereumHandler {
             .encodeABI();
             signedTransaction(func, globalCallback);
     }
-
+    _transit2(drum_id, time, carrier, transportation_schedule, globalCallback) {
+        const func = contract.methods.transit2(
+            web3.utils.toBN(drum_id), 
+            web3.utils.toBN(time), 
+            carrier.toString(), 
+            transportation_schedule.toString()
+            )
+            .encodeABI();
+            signedTransaction(func, globalCallback);
+    }
     _takingOver(drum_id, time, acquisition, transferee, transportation_schedule, fileUrl, globalCallback) {
 
         const func = contract.methods.takingOver(

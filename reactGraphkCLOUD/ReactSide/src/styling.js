@@ -41,7 +41,8 @@ export const useStyles = makeStyles((theme) => ({
     transform: 'scale(0.8)',
   },
   card: {
-    minWidth: 275,
+    width: 275,
+    height: 350,
     display: 'inline-block',
   },
   instructions: {

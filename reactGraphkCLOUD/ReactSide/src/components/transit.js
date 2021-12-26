@@ -43,10 +43,14 @@ function Transit(props) {
         var checkResult = checkConform("transit", params);
         console.log(transactionHash, typeError);
         if (checkResult == "Ok") {
+            if (props.type == "First"){
             setTransactionHash("It was changed!");
-            ethereumHandler._transit(drum_id, time, carrier, transportation_schedule, callbackReceipt); return transactionHash;
-        }
-        else {
+            ethereumHandler._transit(drum_id, time, carrier, transportation_schedule, callbackReceipt); return transactionHash;}
+            if (props.type == "Second"){
+                setTransactionHash("It was changed!");
+                ethereumHandler._transit2(drum_id, time, carrier, transportation_schedule, callbackReceipt); return transactionHash;}
+    
+        }else {
             setTypeError(checkResult);
             console.log(typeError);
             return null;

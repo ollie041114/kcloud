@@ -26,8 +26,8 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 
 
-var StatusArray = ["Enrolled", "Packaged", "In Transit", "Taken Over", "In Temporary Storage"]
-var NameArray = ["Packaging", "Transit", "Taking Over", "Temporary Storage"]
+var StatusArray = ["Enrolled", "Packaged", "In Transit", "In Temporary Storage", "In Transit 2", "Taken Over"]
+var NameArray = ["Packaging", "Transit", "Temporary Storage", "Transit 2", "Taking Over"]
 function getSteps() {
   return NameArray;
 }
@@ -43,14 +43,17 @@ function GetStepContent(props) {
        return <Packaging drumId = {drum.id} key = {drum.id + "2"} handleNext = {props.handleNext}/>;
     case 1:
         console.log("Here, case was"+step);
-        return <Transit drumId  = {drum.id} key = {drum.id+"2"} handleNext = {props.handleNext}/>;
+        return <Transit type = "First" drumId  = {drum.id} key = {drum.id+"3"} handleNext = {props.handleNext}/>;
     case 2:
         console.log("Here, case was"+step);
-        return <TakingOver drumId = {drum.id} key = {drum.id+"4"} handleNext = {props.handleNext}/>;
+        return <TemporaryStorage drumId = {drum.id} key = {drum.id+"4"} handleNext = {props.handleNext}/>;
     case 3:
         console.log("Here, case was"+step);
-        return <TemporaryStorage drumId = {drum.id} key = {drum.id+"3"} handleNext = {props.handleNext}/>;
-    case 4:
+        return <Transit type = "Second" drumId  = {drum.id} key = {drum.id+"5"} handleNext = {props.handleNext}/>;
+    case 4: 
+        console.log("Here, case was"+step);
+        return <TakingOver drumId = {drum.id} key = {drum.id+"6"} handleNext = {props.handleNext}/>;
+    case 5:
         console.log("Here, case was"+step);
         return <p>This drum is fully registered</p>;
     default:

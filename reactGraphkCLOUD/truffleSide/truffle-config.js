@@ -56,7 +56,7 @@ module.exports = {
     development: {
       host: "127.0.0.1",
       port: 8549,
-      network_id: 1500,
+      network_id: "*",
     },
     // Useful for private networks
     // private: {
