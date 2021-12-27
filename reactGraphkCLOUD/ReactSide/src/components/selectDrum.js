@@ -13,8 +13,8 @@ import { useState } from 'react';
 
 export default function SelectDrum(props) {
     const classes = useStyles();
-    const [drum, setDrum] = useState('');
-    
+    const [drum, setDrum] = useState(props.defaultDrum);
+    console.log("Default drum is ", drum);
     const handleChange = (event) => {
       props.parentCallback(event.target.value);
       setDrum(event.target.value);

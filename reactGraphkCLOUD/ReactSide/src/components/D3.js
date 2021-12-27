@@ -122,13 +122,15 @@ export class D3 extends Component {
             Tooltip
                 .style("opacity", 1);
         }
-        var mousemove = function (d) {
-            console.log(d.screenX);
+        var mousemove = function (event, d) {
+            if (d !== undefined && event !== undefined){
+            //console.log(d);
             Tooltip
                 .html(" <b>" + d.name + "</b>: " + d.value + " " + d.unit + "<br> <b>Current Status</b>: " + d.status +
                     "<br>  <small> " + d.description + "</small>")
-                .style("left", (d3.pointer(this)[0] + 70) + "px")
-                .style("top", (d3.pointer(this)[1]) + "px")
+                    .style("left", (d3.pointer(this)[0] + 70) + "px")
+                    .style("top", (d3.pointer(this)[1]) + "px")}
+            
 
         }
         var mouseleave = function (d) {

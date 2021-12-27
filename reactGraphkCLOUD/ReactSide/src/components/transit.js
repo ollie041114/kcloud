@@ -1,7 +1,7 @@
-import React, {Component, useState} from 'react';
-import {gql, useQuery} from "@apollo/client";
-import { getQuery} from "../queries/queries";
-import EthereumHandler from '../truffleSide/writeFunctions/EthereumHandler';
+import React, { Component, useState } from 'react';
+import { gql, useQuery } from "@apollo/client";
+import { getQuery } from "../queries/queries";
+import EthereumHandler from '../ethereumSide/writeFunctions/EthereumHandler';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { SubmitPic } from './SubmitPic';
@@ -12,67 +12,90 @@ import { SubmitStepButton } from './submitStepButton';
 import { StartEndDate } from './StartEndDate';
 import { Grid } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
-//submitPic = new SubmitPic();
+import { checkConform } from "./expectedType";
+import { useStyles } from '../styling';
+import { Box } from '@material-ui/core';
+
 
 function Transit(props) {
-
+    const classes = useStyles();
+    var [typeError, setTypeError] = useState("Ok");
     const callbackReceipt = (childData) => {
         setTransactionReceipt(childData);
-      };
+    };
+    var unixInSeconds = Math.round(+new Date() / 1000);
+    const [drum_id, setDrumId] = useState(props.drumId);
+    //const [sensor_id, setSensorId] = useState(""); 
+    const [carrier, setCarrier] = useState(null);
+    const [startTime, setStartTime] = useState(new Date());
+    const [endTime, setEndTime] = useState(new Date());
+    const [transactionHash, setTransactionHash] = useState(null);
+    const [transactionReceipt, setTransactionReceipt] = useState(null);
 
-      function submitForm(e, {drum_id, carrier, startTime, endTime}){
+    function submitForm(e, { drum_id, carrier, startTime, endTime }) {
         //console.log(drum_id.drum_id, sensor_id.sensor_id, time);
         e.preventDefault();
-        setTransactionHash("It was changed!");
         var transportation_schedule = startTime + "finishes at: " + endTime;
-        var time = Math.round(+new Date()/1000);
+        var time = Math.round(+new Date() / 1000);
         const ethereumHandler = new EthereumHandler();
-        ethereumHandler._transit(drum_id, time, carrier, transportation_schedule, callbackReceipt);
+        console.log(carrier);
+        var params = [drum_id, time, carrier, transportation_schedule];
+        var checkResult = checkConform("transit", params);
+        console.log(transactionHash, typeError);
+        if (checkResult == "Ok") {
+            if (props.type == "First"){
+            setTransactionHash("It was changed!");
+            ethereumHandler._transit(drum_id, time, carrier, transportation_schedule, callbackReceipt); return transactionHash;}
+            if (props.type == "Second"){
+                setTransactionHash("It was changed!");
+                ethereumHandler._transit2(drum_id, time, carrier, transportation_schedule, callbackReceipt); return transactionHash;}
+    
+        }else {
+            setTypeError(checkResult);
+            console.log(typeError);
+            return null;
+        }
+
         return transactionHash;
     }
-        var unixInSeconds = Math.round(+new Date()/1000);
-        const [drum_id, setDrumId] = useState(props.drumId);
-        //const [sensor_id, setSensorId] = useState(""); 
-        const [carrier, setCarrier] = useState("");
-        const [startTime, setStartTime] = useState(new Date());
-        const [endTime, setEndTime] = useState(new Date());
-        const [transactionHash, setTransactionHash] = useState("Oh my goodness");
-        const [transactionReceipt, setTransactionReceipt] = useState(null);
 
-        function startCallback(data) {
-            var date = new Date(data).getTime() / 1000
-            setStartTime(date);
-        }
-        function endCallback(data){
-            var date = new Date(data).getTime() / 1000
-            setEndTime(date);
-        }
-        function ConditionForButton() {
-            if (transactionHash != "Oh my goodness" && transactionReceipt == null){
-                return true;} else{
-                    return false;
-                }
-        }
-        function CallbackForButton(e) {
-            (submitForm(e, {drum_id, carrier, startTime, endTime}))
-        }
-        useEffect(() => {
-            if (transactionReceipt != null){
-                props.handleNext();
-            }
-          }, [transactionReceipt]); // Only re-run the effect if open changes
-          useEffect(() => {
-            console.log(startTime);
-          }, [startTime]); // Only re-run the effect if open changes
 
-        return(
-            <div style = {{marginBottom: "40px"}}>
+
+    function startCallback(data) {
+        var date = new Date(data).getTime() / 1000
+        setStartTime(date);
+    }
+    function endCallback(data) {
+        var date = new Date(data).getTime() / 1000
+        setEndTime(date);
+    }
+    function ConditionForButton() {
+        if (transactionHash != null && transactionReceipt == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function CallbackForButton(e) {
+        (submitForm(e, { drum_id, carrier, startTime, endTime }))
+    }
+    useEffect(() => {
+        if (transactionReceipt != null) {
+            props.handleNext();
+        }
+    }, [transactionReceipt]); // Only re-run the effect if open changes
+    useEffect(() => {
+        console.log(startTime);
+    }, [startTime]); // Only re-run the effect if open changes
+
+    return (
+        <div style={{ marginBottom: "40px" }}>
             <Typography variant="h5" fontWeight="fontWeightMedium" gutterBottom>
-            Transit: {drum_id}
+                Transit: {drum_id}
             </Typography>
-                <form id = "package-drum">
+            <form id="package-drum">
 
-                <Grid container spacing = {3}>
+                <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <TextField
                             required
@@ -82,18 +105,24 @@ function Transit(props) {
                             fullWidth
                             autoComplete="given-name"
                             onChange={(data) => setCarrier(data.target.value)}
-                        /> 
+                        />
                     </Grid>
 
-                    <Grid item xs = {12}>
-                        <StartEndDate startCallback = {startCallback} endCallback = {endCallback} label = "Transportation Schedule"/>
+                    <Grid item xs={12}>
+                        <StartEndDate startCallback={startCallback} endCallback={endCallback} label="Transportation Schedule" />
                     </Grid>
                 </Grid>
 
-                    <SubmitStepButton CallbackForButton = {CallbackForButton} ConditionForButton = {ConditionForButton}/>
-                </form>
-            </div>
-        );
+                <SubmitStepButton CallbackForButton={CallbackForButton} ConditionForButton={ConditionForButton} />
+                
+                {typeError != "Ok" && transactionHash == null ? (
+                    <Box mt={5}>
+                        <Typography className={classes.errorMessage}>{typeError}</Typography>
+                    </Box>
+                ) : (<Typography></Typography>)}
+            </form>
+        </div>
+    );
 };
 
 export default Transit;

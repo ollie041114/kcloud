@@ -81,7 +81,7 @@ export function getExtendedDrumData(drum, props) {
 
     }
     var ExtendedStatusTracker
-    var StatusArray = ["Enrolled", "Packaged", "In Transit", "Taken Over", "'In Temporary Storage'"];
+    var StatusArray = ["Enrolled", "Packaged", "In Transit", "Taken Over", "In Temporary Storage"];
     var ColorArray = ["grey", "grey", "grey", "grey", "grey"];
     for (var i = 0; i < StatusArray.length; i++) {
         if (StatusArray[i] != drum.currentStatus) {
@@ -150,7 +150,7 @@ export function getExtendedDrumData(drum, props) {
             }
         }];
     var ExtendedStatus = itemsList[ExtendedStatusTracker];
-    var sensorData = drum.sensor.sensorData;
+    var sensorData = drum.sensorData;
 
     // Constructing the radioactivity data 
     function between(x, min, max) {
@@ -158,27 +158,17 @@ export function getExtendedDrumData(drum, props) {
         return x >= min && x <= max;
     }
 
-    function determine_status(value, norm, variation) {
+    function determine_status(status) {
         var status;
         var description;
-        if (between(value, norm[0], norm[1])) {
-            status = "Normal"
+        if (status == "Normal") {
             description = "Information matches, or stays within normal ranges"
-            return [status, description];
+            return description;
         }
-        if (between(value, norm[0] - variation, norm[1] + variation)) {
-            status = "Border"
-            description = "Information approaches the boundary of the normal range"
-        }
-        if (!between(value, norm[0] - variation, norm[1] + variation)) {
-            status = "Danger"
+        if (status == "Danger") {
             description = "Information is inconsistent, or is out of normal range"
         }
-        if (value == 0) {
-            status = "Doubt"
-            description = "Abnormal status - possibly sensor power off"
-        }
-        return [status, description];
+        return description;
     }
     function determine_color(status) {
         var color;
@@ -186,14 +176,8 @@ export function getExtendedDrumData(drum, props) {
             case "Normal":
                 color = "#56f000"
                 break
-            case "Border":
-                color = "#ffb302"
-                break
             case "Danger":
                 color = "#ff3838"
-                break
-            case "Doubt":
-                color = "#9ea7ad"
                 break
         }
         return color;
@@ -202,9 +186,9 @@ export function getExtendedDrumData(drum, props) {
     var radio = sensorData.map(item => {
         var norm = [0, 2];
         var variation = 1;
-        var value = item.radio;
-        var status = determine_status(value, norm, variation)[0]
-        var description = determine_status(value, norm, variation)[1]
+        var value = item.radio/10;
+        var status = item.rAlarm.message;
+        var description = determine_status(status)
         var color = determine_color(status)
         return {
             name: "Radioactivity",
@@ -220,11 +204,11 @@ export function getExtendedDrumData(drum, props) {
     })
     // Temperature
     var temp = sensorData.map(item => {
-        var norm = [38.0, 39.0];
-        var variation = 0.1;
-        var value = item.temp/100;
-        var status = determine_status(value, norm, variation)[0]
-        var description = determine_status(value, norm, variation)[1]
+        var norm = [0, 40];
+        var variation = 5;
+        var value = item.temp;
+        var status = item.tAlarm.message
+        var description = determine_status(status)
         var color = determine_color(status)
         return {
             name: "Temperature",
@@ -238,17 +222,17 @@ export function getExtendedDrumData(drum, props) {
             color: color
         };
     })
-    // Humidity
-    var humidity = sensorData.map(item => {
-        var norm = [35, 45];
+    // Acceleration
+    var acceleration = sensorData.map(item => {
+        var norm = [0, 55];
         var variation = 5;
-        var status = determine_status(item.humidity, norm, variation)[0]
-        var description = determine_status(item.humidity, norm, variation)[1]
+        var status=item.aAlarm.message
+        var description = determine_status(status)
         var color = determine_color(status)
         return {
-            name: "Humidity",
-            value: item.humidity,
-            unit: "%",
+            name: "Acceleration",
+            value: (item.accX + item.accZ)/2,
+            unit: "m/s",
             date: new Date(item.time_recorded*1000),
             // Value, [upper_normal, lower_normal], border_boundary
             status: status,
@@ -261,8 +245,8 @@ export function getExtendedDrumData(drum, props) {
     var currentStatus = sensorData.map(item => {
         var norm = [22, 32];
         var variation = 5;
-        var status = determine_status(item.radio, norm, variation)[0]
-        var description = determine_status(item.radio, norm, variation)[1]
+        var status = (item.rAlarm.message)
+        var description = determine_status(status)
         var color = determine_color(status)
         return {
             value: item.currentStatus,
@@ -292,7 +276,7 @@ export function getExtendedDrumData(drum, props) {
             sensor_id: drum.sensor.id,
             radio: radio, // array of radioactivity points, each with status and color
             temp: temp,
-            humidity: humidity,
+            acceleration: acceleration,
             currentStatus: currentStatus,
             time_recorded: time_recorded
         },

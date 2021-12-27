@@ -19,7 +19,8 @@ const getBooksQuery = gql`
         id
         sensor{
             id
-            sensorData{
+        }
+        sensorData{
                 currentStatus 
                 time_recorded
                 GPS_longitude
@@ -29,9 +30,28 @@ const getBooksQuery = gql`
                 temp 
                 humidity
                 radio
-                alarm
+                aAlarm{
+                    id 
+                    message
+                    sensorDatum{
+                        time_recorded
+                    }
+                }
+                tAlarm{
+                    id 
+                    message
+                    sensorDatum{
+                        time_recorded
+                    }
+                }
+                rAlarm{
+                    id 
+                    message
+                    sensorDatum{
+                        time_recorded
+                    }
+                }
             }
-        }
         currentStatus
         date_unix
         classification
