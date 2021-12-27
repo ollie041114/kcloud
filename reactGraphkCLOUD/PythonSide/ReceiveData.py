@@ -23,8 +23,17 @@ def DateTimeToUNIX(date, time):
         hour = int(0)
     else:
         hour = int(hour)
-    minute = int(time[2:4].lstrip('0'))
-    second = int(time[4:6].lstrip('0'))
+    minute = (time[2:4].lstrip('0'))
+    if not minute:
+        minute = int(0)
+    else:
+        minute = int(minute)
+    second = (time[4:6].lstrip('0'))
+    if not second:
+        second = int(0)
+    else:
+        second = int(second)
+
 
     datetimey = datetime.datetime(year, month, day, hour, minute)
     print(datetimey)

@@ -11,6 +11,7 @@ import json
 import uuid
 from web3 import Web3
 import codecs
+import time as timely
 import random
 class EthereumHandler:
     def get_address(self):
@@ -40,32 +41,31 @@ class EthereumHandler:
         self.account = self.w3.eth.account.privateKeyToAccount(self.private_key_bytes)
     
     def injectFakeData(self):
-        sensor_list = ["0x320050", "0x320050", "0x610051", "0x3D0050", "0x1A0050"]
+        sensor_list = ["320050", "0x320050", "0x610051", "0x3D0050", "0x1A0050"]
         
         # for sensorId in sensor_list:
         #     nonce = 0
         x = 1
         nonce = 0
         sensorId = sensor_list[0]
-        if (True):
-            dataId = "215243"
+        for x in range(0, 20):
+            dataId = str(uuid.uuid1().int>>32)
             sensorId = "320050"
-            time = 67845678920
+            time = int(timely.time() + 60*x)
             latitude = int(0)
             longitude = int(0)
-            accX = int(26)
-            accY = int(27)
-            accZ = int(23) 
-            temp = int(str(35.68*100)[0:2]) 
+            accX = int(random.randint(23, 26))
+            accY = int(random.randint(20, 25))
+            accZ = int(random.randint(15, 25)) 
+            temp = int(str(random.randint(32, 48))) 
             humi = int(random.uniform(15, 20))
             radio = int(random.uniform(0, 2)*10)
             end = int(0)
             KCLOUD_txn = self.KCLOUD.functions.passSensorData(\
                 dataId, sensorId, time, latitude, longitude, accX, \
                 accY, accZ, temp, humi, radio)\
-            .buildTransaction({'chainId': 1500, 'gas': 800000, 'gasPrice': self.w3.toWei('200', 'gwei'), 'nonce': (self.w3.eth.getTransactionCount(self.account._address))})
+            .buildTransaction({'chainId': 1500, 'gas': 800000, 'gasPrice': self.w3.toWei('200', 'gwei'), 'nonce': (self.w3.eth.getTransactionCount(self.account._address)+x)})
             nonce = nonce + 1
-    
             signed_txn = self.w3.eth.account.sign_transaction(KCLOUD_txn, private_key = self.private_key_bytes)
             txn_hash = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
             print(txn_hash)
