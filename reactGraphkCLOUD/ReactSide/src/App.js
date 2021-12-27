@@ -1,5 +1,5 @@
 
-import {React, Component} from 'react';
+import {React, Component, useState} from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Explorer from './pages/Explorer';
@@ -8,14 +8,11 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  useQuery,
-  gql
 } from "@apollo/client";
 import Registration from './pages/Registration';
 import DrumHistory from './pages/DrumHistory';
 import GoogleMaps from './pages/GoogleMaps';
 import SensorData from './pages/SensorData';
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Paths from './components/Paths';
 import { getBooksQuery } from "./queries/queries";
@@ -62,7 +59,13 @@ function App() {
     uri: 'http://localhost:8000/subgraphs/name/ollie041114/Kcloud',
     cache: new InMemoryCache()
   })
-
+  var [timer, setTimer] = useState(Date.now()/1000);
+  console.log(timer);
+  if (Date.now()/1000 - timer > 10){
+    console.log("True!");
+    setTimer(Date.now()/1000);
+    client.resetStore();
+  }
     return (
       // {(sensorData != null) ?
       //   (
@@ -72,7 +75,7 @@ function App() {
       //   )
       // }
       <ApolloProvider client={client}>
-        {(signIn == true) ? (<Router>
+        {(signIn !== true) ? (<Router>
         <Switch>
           <Route exact from = "/" render ={props => <Registration{...props} />  }/>
           <Route exact path= "/Explorer" render ={props => <Explorer{...props} />  }/>

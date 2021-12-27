@@ -4,6 +4,10 @@ import MapboxDraw from "!@mapbox/mapbox-gl-draw"; // eslint-disable-line import/
 import { useStyles } from '../styling.js';
 import { useMapBoxStyles } from '../stylingMapBox.js';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { gql, useQuery } from "@apollo/client";
+import { getBooksQuery } from "../queries/queries";
+import {updateTime} from './updateTime';
+
 mapboxgl.accessToken = 'pk.eyJ1Ijoib2xsaWUwNDExMTQiLCJhIjoiY2t3OWdvNml1MzBwcjMwcm9tMDN6YmIxdCJ9.id2MXpw8OyHi7zhaSs1svw';
 
 const ConstCoordinates =  [
@@ -156,7 +160,7 @@ const ConstCoordinates =  [
         35.296564
       ]
     ];
-const setCoordinates = [
+const bullshitCoordinates = [[
     [
       129.220133,
       35.237844
@@ -305,17 +309,64 @@ const setCoordinates = [
       129.240196,
       35.296564
     ]
-  ];
+  ]];
+var setCoordinates = [];
+
 
 function CheckTheRoute(props) {
-    const classes = useStyles();
+  const { loading, error, data, refetch } = useQuery(getBooksQuery);      
+  const now = new Date().toLocaleTimeString();
+  let [time, setTime] = useState(now);
+  
+  useEffect(() => {
+    console.log(`initializing interval`);
+    const interval = setInterval(() => {
+      updateTime(refetch, setTime);
+    }, 10000);
+  
+    return () => {
+      console.log(`clearing interval`);
+      clearInterval(interval);
+    };
+  }, []); 
+
+  const arrayForSorting = [...data.drums[2].sensorData];
+  var timeSortedSensorD = arrayForSorting.sort(function(a, b) {
+    var Atime = a.time_recorded; // ignore upper and lowercase
+    var Btime = b.time_recorded; // ignore upper and lowercase
+    if (Atime < Btime) {
+      return -1;
+    }
+    if (Atime > Btime) {
+      return 1;
+    }
+  
+    // names must be equal
+    return 0;
+  });
+  console.log(timeSortedSensorD);
+
+  const classes = useStyles();
     const classesMapBox = useMapBoxStyles();
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(129.2294);
     const [lat, setLat] = useState(35.2656);
     const [zoom, setZoom] = useState(11.4);
+    var [once, setOnce] = useState(0);
     useEffect(() => {
+      if (once==0 && setCoordinates.length <99 ){
+        timeSortedSensorD.map((sensorDatum)=>{
+        if (sensorDatum.GPS_longitude != 0 && sensorDatum.GPS_Latitude != 0){
+          setCoordinates.push([
+          sensorDatum.GPS_longitude/(60*10**5),
+          sensorDatum.GPS_Latitude/(60*10**5)
+        ]); 
+      }
+      })
+      console.log(setCoordinates);
+    setOnce(1);
+  }
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
@@ -480,6 +531,8 @@ function CheckTheRoute(props) {
     });
 
     // Add the draw tool to the map.
+
+    if (loading) return (<option disabled>Loading...</option>);  
     return (
         <div>
             <div>

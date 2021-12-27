@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import App from "../App";
 import { gql, useQuery } from "@apollo/client";
 import { getBooksQuery } from "../queries/queries";
@@ -10,6 +10,34 @@ import { ExploreAggregator } from '../components/exploreAggregator';
 import Box from '@mui/material/Box';
 import { ExploreAggregatorText } from '../components/exploreCards.js'
 import Grid from '@mui/material/Grid';
+import { useState } from 'react';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import {updateTime} from '../components/updateTime.js';
+
+function VerticalToggleButtons(props) {
+    var view = props.view;
+    var handleChange = props.handleChange;
+    return (
+        <ToggleButtonGroup
+            orientation="vertical"
+            value={view}
+            exclusive
+            onChange={handleChange}
+        >
+            <ToggleButton value="False" aria-label="list">
+                <ViewListIcon />
+            </ToggleButton>
+            <ToggleButton value="True" aria-label="module">
+                <ViewModuleIcon />
+            </ToggleButton>
+        </ToggleButtonGroup>
+    );
+}
+
 export const withRouter = (Component) => {
     const Wrapper = (props) => {
         const history = useHistory();
@@ -42,10 +70,10 @@ function Oncl(event, history, drum) {
     });
 }
 
-function ExchangeRates(data) {
-    return data.drums.map(drum => {
+function ExchangeRates(drums, filtered) {
+    return drums.map(drum => {
         return (
-            <DrumCard drum={drum} onClick={Oncl} forAlarm={OnClickForAlarm}></DrumCard>
+            <DrumCard drum={drum} onClick={Oncl} forAlarm={OnClickForAlarm} filtered = {filtered}></DrumCard>
         )
     });
 }
@@ -83,13 +111,55 @@ function Aggregator(data) {
     }
     return population;
 }
+function filter(data, view) {
+    var filteredDataDrums = [];
+    if (view == "All drums") {
+        return data.drums;
+    }
+    if (view == "Filtered") {
+        var counter = 0;
+        data.drums.map((drum) => {
+            for (var i = 0; i < drum.sensorData.length; i++) {
+                var item = drum.sensorData[0];
+                if (item.rAlarm.message == "Danger" || item.tAlarm.message == "Danger" || item.aAlarm.message == "Danger") {
+                    filteredDataDrums.push(drum);
+                    break;
+                }
+            }
+        });
+    return filteredDataDrums;
+}
+}
 
 function Explorer() {
+    const [view, setView] = useState('False');
+    const handleChange = (event, nextView) => {
+        setView(nextView);
+    };
+
     const classes = useStyles();
-    const { loading, error, data } = useQuery(getBooksQuery);
+     // Refetching every second
+     const { loading, error, data, refetch } = useQuery(getBooksQuery);      
+     const now = new Date().toLocaleTimeString();
+ 
+     let [time, setTime] = useState(now);
+ 
+     useEffect(() => {
+       console.log(`initializing interval`);
+       const interval = setInterval(() => {
+         updateTime(refetch, setTime);
+       }, 10000);
+     
+       return () => {
+         console.log(`clearing interval`);
+         clearInterval(interval);
+       };
+     }, []); 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
     var population = Aggregator(data);
+    //var drums = filter(data, view);
+    // data = 
     return (
         <div className={classes.root}>
             <Drawer></Drawer>
@@ -105,7 +175,12 @@ function Explorer() {
                         </Grid>
                     </Grid>
                 </Box>
-                {ExchangeRates(data)}
+                <Box sx={{ display: 'inline' }}>
+                    <VerticalToggleButtons handleChange={handleChange} view={view} />
+                    <Box>
+                        {ExchangeRates(data.drums, view)}
+                    </Box>
+                </Box>
             </div>
         </div>
     );

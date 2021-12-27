@@ -32,7 +32,7 @@ const expectedType = {
         "Sensor Id": (e)=> tryString(e)
     },
     "packaging": {
-        "Drum id": (e)=> tryNumber(e),
+        "Drum id": (e)=> tryString(e),
         "Time": (e)=> tryNumber(e),
         "Classification": (e)=> tryString(e),
         "Type": (e)=> tryString(e),
@@ -42,13 +42,13 @@ const expectedType = {
         "Waste Acceptance Request": (e)=> tryString(e)
     },
     "transit": {
-        "Drum id": (e)=> tryNumber(e),
+        "Drum id": (e)=> tryString(e),
         "Time": (e)=> tryNumber(e),
         "Carrier": (e)=> tryString(e),
         "Transportation Schedule": (e)=> tryString(e)
     },
     "temporaryStorage": {
-        "Drum id": (e)=> tryNumber(e),
+        "Drum id": (e)=> tryString(e),
         "Time": (e)=> tryNumber(e),
         "Storage id": (e)=> tryNumber(e),
         "Longitude": (e)=> tryNumber(e),
@@ -56,7 +56,7 @@ const expectedType = {
         "Storage schedule": (e)=> tryString(e)
     },
     "takingOver": {
-        "Drum id": (e)=> tryNumber(e),
+        "Drum id": (e)=> tryString(e),
         "Time": (e)=> tryNumber(e),
         "Acquisition": (e)=> tryString(e),
         "Transferee": (e)=> tryString(e),

@@ -85,9 +85,9 @@ function EnrollDrum() {
   const [time, setTime] = useState(Math.round(+new Date() / 1000));
   const [transactionHash, setTransactionHash] = useState(null);
   const [transactionReceipt, setTransactionReceipt] = useState(null);
+
   const { loading, error, data } = useQuery(getBooksQuery);
   if (loading) return (<option disabled>Loading...</option>);
-
   return (
     <div style={{ marginBottom: "40px" }}>
       <Typography variant="h5" fontWeight="fontWeightMedium" gutterBottom>

@@ -9,7 +9,7 @@ function getData() {
 }
 
 function getAddress() { 
-  var data = getData();
+  var data = "Node 1";
   var address = "";
   if (data == "Node 1"){
     address = "0xe9b84bd0e6186fe15b799b1c9504950be9b757f0";
@@ -30,7 +30,7 @@ function getAddress() {
 } 
 
 function getPrivateKey() { 
-  var data = getData();
+  var data = "Node 1";
   var privateKey = "";
   if (data == "Node 1"){
     privateKey = "fcf36e0625ea8cfdd7e771bea899f0816c4cf98a04d70df7f16d51a1cdc15f18";

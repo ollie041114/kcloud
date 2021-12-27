@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Drawer from '../components/Drawer';
 import { useStyles } from '../styling';
-import { Charts } from '../components/Chart';
 import { gql, useQuery } from "@apollo/client";
 import { getBooksQuery } from "../queries/queries";
 import SelectDrum from '../components/selectDrum';
@@ -20,6 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
+import {updateTime} from '../components/updateTime.js';
 
 function CollapsableAlarm(props){
   var drum = props.drum;
@@ -151,8 +151,8 @@ function Body(props) {
   const [drum, setDrum] = React.useState(null);
   const [extendedDrum, setExtendedDrum] = React.useState(null);
   const [sensorData, setSensorData] = React.useState(null);
-  const [update, setUpdate] = React.useState(false);
 
+  const [update, setUpdate] = React.useState(false);
   useEffect(() => {
     if (location.pathname == "/SensorData") {
         console.log(location);
@@ -290,7 +290,22 @@ export default function SensorData() {
 
 
   const classes = useStyles();
-  const { loading, error, data } = useQuery(getBooksQuery);
+    // Refetching every second
+    const { loading, error, data, refetch } = useQuery(getBooksQuery);      
+    const now = new Date().toLocaleTimeString();
+    let [time, setTime] = useState(now);
+    
+    useEffect(() => {
+      console.log(`initializing interval`);
+      const interval = setInterval(() => {
+        updateTime(refetch, setTime);
+      }, 10000);
+    
+      return () => {
+        console.log(`clearing interval`);
+        clearInterval(interval);
+      };
+    }, []); 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 

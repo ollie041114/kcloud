@@ -49,14 +49,14 @@ export async function signedTransaction(func, globalCallback){
         web3.eth.getTransactionCount(account1, (err, txCount) => {
             const txObject = {
                 nonce:    web3.utils.toHex(txCount),
-                gasLimit: web3.utils.toHex("7413288"), // Raise the gas limit to a much higher amount
+                gasLimit: web3.utils.toHex("4000000"), // Raise the gas limit to a much higher amount
                 gasPrice: web3.utils.toHex(web3.utils.toWei('1', 'wei')),
                 //from: account1,
                 to: contractAddress,
                 data: func
             }
-            
-            console.log("this is the Tx: ", Tx);
+            console.log(contractAddress);
+            console.log(account1);        
             //var tx = new Tx(txObject, {chain: 'ropsten'});
             var tx = new Tx(txObject,  { common: customCommon });
             tx.sign(privateKey1);
@@ -68,6 +68,7 @@ export async function signedTransaction(func, globalCallback){
                 }
                  var transactionHash = hash;
                  callback(transactionHash);
+
                  console.log("transaction hash is "+transactionHash);
             });
             })

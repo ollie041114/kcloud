@@ -15,7 +15,7 @@ class EthereumHandler {
 
     _packaging(drum_id, time, classification, w_type, date_unix, place_of_occurence, dose_rate, pollution_level, fileUrl, globalCallback) {
         const func = contract.methods.packaging(
-            web3.utils.toBN(drum_id), 
+            (drum_id), 
             web3.utils.toBN(time), 
             classification.toString(), 
             w_type.toString(), 
@@ -31,7 +31,7 @@ class EthereumHandler {
 
     _transit(drum_id, time, carrier, transportation_schedule, globalCallback) {
         const func = contract.methods.transit(
-            web3.utils.toBN(drum_id), 
+            (drum_id), 
             web3.utils.toBN(time), 
             carrier.toString(), 
             transportation_schedule.toString()
@@ -42,7 +42,7 @@ class EthereumHandler {
 
     _temporaryStorage(drum_id, time, longitude, latitude, storage_id, storage_schedule, globalCallback) {
         // console.log(drum_id, time, longitude, latitude, storage_id, storage_schedule);
-        const drum_idBN = (web3.utils.toBN(drum_id));
+        const drum_idBN = ((drum_id));
         const time_idBN = web3.utils.toBN(time);
         const longitudeBN = (web3.utils.toBN(longitude));
         const latitudeBN = (web3.utils.toBN(latitude));
@@ -60,7 +60,7 @@ class EthereumHandler {
     }
     _transit2(drum_id, time, carrier, transportation_schedule, globalCallback) {
         const func = contract.methods.transit2(
-            web3.utils.toBN(drum_id), 
+            (drum_id), 
             web3.utils.toBN(time), 
             carrier.toString(), 
             transportation_schedule.toString()
@@ -71,7 +71,7 @@ class EthereumHandler {
     _takingOver(drum_id, time, acquisition, transferee, transportation_schedule, fileUrl, globalCallback) {
 
         const func = contract.methods.takingOver(
-            web3.utils.toBN(drum_id), 
+            (drum_id), 
             web3.utils.toBN(time), 
             acquisition.toString(), 
             transferee.toString(), 
