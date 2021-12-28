@@ -25,9 +25,9 @@ class EthereumHandler:
         self.data_json = json.load(self.data)
 
 
-        self.infura_provider = 'http://localhost:8545'
+        self.infura_provider = 'http://localhost:8548'
         self.contract_address = self.get_address()
-        self.private_key_string = "fcf36e0625ea8cfdd7e771bea899f0816c4cf98a04d70df7f16d51a1cdc15f18"    
+        self.private_key_string = "22e2a5cabf8826f9f75090a71db77120f4b8370f846c6abd3b9085cd19bc438d"    
 
         self.w3 = Web3(Web3.HTTPProvider(self.infura_provider))
         f = open("../truffleSide/build/contracts/KCLOUD.json")

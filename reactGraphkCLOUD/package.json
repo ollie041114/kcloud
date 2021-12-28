@@ -43,7 +43,7 @@
     "react-scripts": "4.0.3",
     "react-window": "^1.8.6",
     "styled-components": "^5.3.0",
-    "truffle": "^5.4.25",
+    "truffle": "^5.4.26",
     "truffle-hdwallet-provider": "^1.0.17",
     "typescript": "^4.3.5",
     "web-vitals": "^1.0.1",

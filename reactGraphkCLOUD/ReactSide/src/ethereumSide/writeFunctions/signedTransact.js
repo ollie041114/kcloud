@@ -6,7 +6,7 @@ const Tx = require('ethereumjs-tx').Transaction
 const Web3 = require('web3');
 
 //export const web3 = new Web3(new Web3.providers.HttpProvider(infura));
-export const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+export const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8548'));
 
 //For outside-lab testing
 // const customCommon = Common.forCustomChain(
@@ -35,10 +35,9 @@ const customCommon = Common.forCustomChain(
 export const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 web3.eth.getBlock("latest", false, (error, result) => {
-   console.log("hass gasssss: ", result.gasLimit);
+   // console.log("hass gasssss: ", result.gasLimit);
     //=> 8000029
  });
-
 
 export async function signedTransaction(func, globalCallback){
     // var balance = await web3.eth.getBalance(account1); //Will give value in.

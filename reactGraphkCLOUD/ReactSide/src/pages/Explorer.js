@@ -17,6 +17,38 @@ import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {updateTime} from '../components/updateTime.js';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import Button from '@mui/material/Button';
+import CloseIcon from '@mui/icons-material/Close';
+
+function CollapsableAlarm(props){
+    var drum = props.drum;
+     const [open, setOpen] = React.useState(true);
+    return <Box sx={{ width: '100%' }}>
+    <Collapse in={open}>
+      <Alert severity="error"
+        action={
+          <IconButton
+            aria-label="delete"
+            color="inherit"
+            size="small"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            <CloseIcon fontSize="inherit" />
+          </IconButton>
+        }
+        sx={{ mb: 2 }}
+      >
+        {props.text}
+      </Alert>
+    </Collapse>
+  </Box>
+  }
+
 
 function VerticalToggleButtons(props) {
     var view = props.view;
@@ -131,6 +163,58 @@ function filter(data, view) {
 }
 }
 
+function FinalAlarmHandler(props) {
+    var drums = props.data.drums;
+
+    var alarmData = [];
+    for (var i = 0; i < drums.length; i++){
+        var drum = drums[i];
+        drum.sensorData.map((datum)=>{
+            var data = {
+                drum_id: drum.id,
+                time_recorded: datum.time_recorded,
+                aMessage: datum.aAlarm.message,
+                tMessage: datum.aAlarm.message,
+                rMessage: datum.aAlarm.message
+            }
+            alarmData.push(data);
+        });
+    }
+    var timeSortedAlarmData = alarmData.sort(function(a, b) {
+        var Atime = a.time_recorded; // ignore upper and lowercase
+        var Btime = b.time_recorded; // ignore upper and lowercase
+        if (Atime < Btime) {
+          return 1;
+        }
+        if (Atime > Btime) {
+          return -1;
+        }
+      
+        // names must be equal
+        return 0;
+      });
+    console.log(timeSortedAlarmData);
+    var timeSortedAlarmData = timeSortedAlarmData.slice(0, 5);
+    return timeSortedAlarmData.map((datum)=>{
+        var tDate = new Date(datum.time_recorded*1000);
+        var aDate = new Date(datum.time_recorded*1000);
+        var rDate = new Date(datum.time_recorded*1000);
+        var aDateStr = datum.drum_id+": Acceleration is in danger: " + aDate.toString();
+        var rDateStr = datum.drum_id+": Radioactivity is in danger: " + rDate.toString();
+        var tDateStr = datum.drum_id+": Temperature is in danger: " + tDate.toString();
+        if (datum.tMessage == "Danger"){
+        console.log("DANGEROUS!");
+        return (<CollapsableAlarm drum = {datum} text={tDateStr}/>);
+        }
+        if (datum.aMessage == "Danger"){
+        return (<CollapsableAlarm drum = {datum} text={aDateStr}/>);
+        }
+        if (datum.rMessage == "Danger"){
+        return (<CollapsableAlarm drum = {datum} text={rDateStr}/>);
+        }
+    }
+        )
+}
 function Explorer() {
     const [view, setView] = useState('False');
     const handleChange = (event, nextView) => {
@@ -160,6 +244,7 @@ function Explorer() {
     var population = Aggregator(data);
     //var drums = filter(data, view);
     // data = 
+    console.log(data);
     return (
         <div className={classes.root}>
             <Drawer></Drawer>
@@ -172,6 +257,7 @@ function Explorer() {
                         </Grid>
                         <Grid item xs={6}>
                             <ExploreAggregatorText data={population} />
+                            <FinalAlarmHandler data = {data} />
                         </Grid>
                     </Grid>
                 </Box>
