@@ -49,7 +49,7 @@ export async function signedTransaction(func, globalCallback){
         web3.eth.getTransactionCount(account1, (err, txCount) => {
             const txObject = {
                 nonce:    web3.utils.toHex(txCount),
-                gasLimit: web3.utils.toHex("4000000"), // Raise the gas limit to a much higher amount
+                gasLimit: web3.utils.toHex("8000000"), // Raise the gas limit to a much higher amount
                 gasPrice: web3.utils.toHex(web3.utils.toWei('1', 'wei')),
                 //from: account1,
                 to: contractAddress,
