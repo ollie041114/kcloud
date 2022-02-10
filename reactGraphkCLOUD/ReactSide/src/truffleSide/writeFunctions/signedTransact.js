@@ -51,7 +51,7 @@ export async function signedTransaction(func, globalCallback){
             const txObject = {
                 nonce:    web3.utils.toHex(txCount),
                 gasLimit: web3.utils.toHex("4792621"), // Raise the gas limit to a much higher amount
-                gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'wei')),
+                gasPrice: web3.utils.toHex(web3.utils.toWei('1', 'wei')),
                 //from: account1,
                 to: contractAddress,
                 data: func

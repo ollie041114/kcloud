@@ -42,6 +42,7 @@ contract KCLOUD {
     //   function append(string memory a, string memory b) public returns (string memory) {
     //     return string(abi.encodePacked(a, b));
     // }
+
     function checkTemperature(uint temperature) private returns (string memory) {
         if (temperature<=40){
             return "Normal";        
@@ -76,10 +77,17 @@ contract KCLOUD {
         my_drum.drum_id = drum_id;
         drumIDToDrum[drum_id] = my_drum;
     }
+
+    
     function packaging(string memory drum_id, uint time, string memory classification, string memory w_type, uint date_unix, string memory place_of_occurence, uint radioactive_concentration, uint pollution_level, string memory waste_acceptance_request) public {
         drumIDToDrum[drum_id].classification = classification;
         drumIDToDrum[drum_id].w_type = w_type;
         emit DrumPackaged(drum_id, time, classification, w_type, date_unix, place_of_occurence, radioactive_concentration, pollution_level, waste_acceptance_request);        
+    }
+    
+    
+    function checkGPS(string memory drum_id, uint time, uint decimals, uint longitude, uint latitude) private{
+            emit GPSDataEvent(drum_id, time, longitude, latitude);
     }
     
     function transit(string memory drum_id, uint time, string memory carrier, string memory transportation_schedule) public {
@@ -98,13 +106,7 @@ contract KCLOUD {
            emit SensorDataEvent2(data_id, accZ, temp, humi, radio, "Problem"); // checkAcceleration(uint accX, uint accY, uint accZ)
            emit NewAlarmEvent(data_id, data_id, "Acceleration", sensorToDrumID[sensor_id], checkAcceleration(accX, accY, accZ));
            emit NewAlarmEvent(data_id, data_id, "Temperature", sensorToDrumID[sensor_id], checkRadio(temp));
-    }
-    function generateRadioAlarm(string memory data_id, string memory sensor_id, uint time) public{
-           emit NewAlarmEvent(data_id, data_id, "Radioactivity", sensorToDrumID[sensor_id], "Danger");
-    }
-    
-    function generateGPSAlarm(string memory data_id, string memory sensor_id, uint time) public{
-            emit NewAlarmEvent(data_id, data_id, "GPS", sensorToDrumID[sensor_id], "Danger");
+           emit NewAlarmEvent(data_id, data_id, "Radioactivity", sensorToDrumID[sensor_id], checkRadio(radio));
     }
 
     function temporaryStorage(string memory drum_id, uint time, uint longitude, uint latitude, uint storage_id, string memory storage_schedule) public{
