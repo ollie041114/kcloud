@@ -79,7 +79,12 @@ contract KCLOUD {
     }
 
     
-    function packaging(string memory drum_id, uint time, string memory classification, string memory w_type, uint date_unix, string memory place_of_occurence, uint radioactive_concentration, uint pollution_level, string memory waste_acceptance_request) public {
+    function packaging(string memory drum_id, 
+    uint time, 
+    string memory classification, 
+    string memory w_type, 
+    uint date_unix, 
+    string memory place_of_occurence, uint radioactive_concentration, uint pollution_level, string memory waste_acceptance_request) public {
         drumIDToDrum[drum_id].classification = classification;
         drumIDToDrum[drum_id].w_type = w_type;
         emit DrumPackaged(drum_id, time, classification, w_type, date_unix, place_of_occurence, radioactive_concentration, pollution_level, waste_acceptance_request);        
@@ -90,9 +95,22 @@ contract KCLOUD {
             emit GPSDataEvent(drum_id, time, longitude, latitude);
     }
     
-    function transit(string memory drum_id, uint time, string memory carrier, string memory transportation_schedule) public {
-           emit DrumInTransit(drum_id, time, carrier, transportation_schedule);
+    function drumInTransit(string memory drum_id, 
+            uint time, 
+            string memory carrier, 
+            string memory transportation_schedule) public {
+            
+            require(onlyOwner(drum_id));
+            require(drums[drum_id].status=="PACKAGING");
+            
+            drums(drum_id).status = Status({
+                status: "TRANSIT",
+                handled: msg.sender.address
+            });
+            emit DrumInTransit(drum_id, time, msg.sender, carrier, transportation_schedule);
     }
+    
+    
     function transit2(string memory drum_id, uint time, string memory carrier, string memory transportation_schedule) public {
            emit DrumInTransit2(drum_id, time, carrier, transportation_schedule);
     }
